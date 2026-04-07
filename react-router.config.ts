@@ -10,11 +10,14 @@ export default {
     v8_middleware: true,
   },
   async prerender() {
-    const paths: string[] = ["/"];
+    const paths: string[] = ["/", "/docs/"];
 
     for (const entry of await glob("**/*.mdx", { cwd: "content/docs" })) {
       const slugs = getSlugs(entry);
-      paths.push(getUrl(slugs), `/llms.mdx/docs/${[...slugs, "content.md"].join("/")}`);
+      paths.push(
+        getUrl(slugs),
+        `/llms.mdx/docs/${[...slugs, "content.md"].join("/")}`,
+      );
     }
 
     return paths;
