@@ -1,0 +1,76 @@
+---
+title: Annotations
+description: Annotation syntax, documentation annotations, execution annotations, namespaced annotations, and compiler-meaning annotation families.
+---
+
+Annotations are one of Kira's defining language mechanisms.
+
+## Annotation Syntax
+
+The current frontend understands several annotation styles:
+
+| Style | Example |
+| --- | --- |
+| Bare | `@Main` |
+| Namespaced | `@FFI.Pointer` |
+| Argument form | `@Doc("Axis-aligned rectangle")` |
+| Block form | `@Doc { "The dashboard content is composed structurally." }` |
+| Object-like argument block | `@FFI.Callback { abi: c; params: [I64, RawPtr]; result: I64; }` |
+
+## Execution Annotations
+
+Three annotations have direct compiler meaning for execution:
+
+- `@Main`
+- `@Runtime`
+- `@Native`
+
+They choose entrypoints and execution placement, and the semantics layer rejects duplicates or conflicting combinations.
+
+## Documentation Annotations
+
+`@Doc` appears throughout the examples:
+
+```ts
+@Doc("Horizontal position in points.")
+var x: Float = 0.0
+
+@Doc {
+    "The dashboard content is composed structurally."
+}
+content {
+    ...
+}
+```
+
+These examples are important because they show that annotations are part of ordinary source structure, not a niche add-on.
+
+## FFI Annotation Families
+
+The current compiler also gives semantic meaning to these interop annotations:
+
+- `@FFI.Extern`
+- `@FFI.Callback`
+- `@FFI.Pointer`
+- `@FFI.Struct`
+- `@FFI.Alias`
+- `@FFI.Array`
+
+Those annotations are covered in more detail in [Interop and FFI](/docs/language-guide/interop-and-ffi).
+
+## Construct-Declared Annotation Use
+
+Construct definitions can declare which annotations are valid in construct forms:
+
+```ts
+construct Widget {
+    annotations {
+        @State;
+        @Binding;
+        @Env;
+        @Doc;
+    }
+}
+```
+
+That is part of how Kira lets libraries define richer language surfaces while still keeping validation in the compiler.

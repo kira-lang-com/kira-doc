@@ -1,0 +1,64 @@
+---
+title: Interop and FFI
+description: "The current compiler-visible FFI surface: extern declarations, callbacks, pointers, structs, aliases, arrays, and generated bindings."
+---
+
+Kira's native interop surface is explicit and compiler-visible.
+
+## Compiler-Meaning FFI Annotations
+
+Generated and handwritten interop code uses these annotation families today:
+
+- `@FFI.Extern`
+- `@FFI.Callback`
+- `@FFI.Pointer`
+- `@FFI.Struct`
+- `@FFI.Alias`
+- `@FFI.Array`
+
+## Extern Functions
+
+Extern functions are declarations terminated with `;`:
+
+```ts
+@FFI.Extern { library: callbacks; symbol: kira_invoke_callback; abi: c; }
+function kira_invoke_callback(callback: kira_i64_callback, user_data: RawPtr, value: I64): I64;
+```
+
+The semantics layer enforces that `@FFI.Extern` functions must be declarations rather than block-bodied functions.
+
+## Callback Types
+
+Callback signatures are first-class enough to validate:
+
+```ts
+@FFI.Callback { abi: c; params: [I64, RawPtr]; result: I64; }
+type kira_i64_callback {}
+```
+
+The fail corpus also proves `KSEM045` ("invalid callback signature") when a Kira callback does not match the expected FFI callback type.
+
+## Pointer, Struct, Alias, and Array Types
+
+The current generated/native examples also prove:
+
+- borrowed pointer wrappers
+- C-layout structs
+- alias types with static constants
+- array metadata in generated bindings
+
+Examples:
+
+```ts
+@FFI.Struct { layout: c; }
+type app_state {
+    let viewport_width: I32
+}
+
+@FFI.Pointer { target: app_state; ownership: borrowed; }
+type app_state_ptr {}
+```
+
+## Where to Go Next
+
+This chapter explains the language-visible surface. For the workflow side of manifests, autobinding generation, and examples, continue in [FFI Workflows](/docs/appendix/ffi-workflows).

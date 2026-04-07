@@ -1,0 +1,56 @@
+---
+title: Expressions
+description: Literal, unary, binary, conditional, call, member, array, and namespaced expression forms in current Kira.
+---
+
+## Primary Expression Forms
+
+The current frontend understands these expression families:
+
+- integer, float, string, and boolean literals
+- identifiers and qualified names
+- grouped expressions
+- array literals
+- member access
+- call expressions
+
+## Unary and Binary Expressions
+
+Supported operator families include:
+
+- unary `-` and `!`
+- arithmetic `+ - * / %`
+- comparison `== != < <= > >=`
+- logical `&& ||`
+
+Current semantic rules:
+
+- arithmetic requires matching numeric operand types
+- comparison requires matching operand types
+- logical operators require booleans
+
+## Conditional Expressions
+
+The parser accepts conditional expressions:
+
+```ts
+condition ? thenValue : elseValue
+```
+
+Current status:
+
+- parsed by the frontend
+- rejected by semantic lowering with `KSEM033`
+- not part of the current executable subset
+
+## Calls and Member Access
+
+Call expressions support argument lists and labeled arguments:
+
+```ts
+helper()
+Rect(x: 0.0, y: 0.0)
+callbacks.kira_invoke_callback(add_two, 0, 5)
+```
+
+Member access uses `.` and is part of ordinary source and generated/native interop examples.

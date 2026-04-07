@@ -1,0 +1,45 @@
+---
+title: Annotations Reference
+description: The annotation families recognized by the current frontend and the ones with direct compiler meaning.
+---
+
+## Annotation Syntax
+
+The frontend understands:
+
+- bare annotations such as `@Main`
+- namespaced annotations such as `@FFI.Pointer`
+- argument-form annotations such as `@Doc("...")`
+- block-form annotations such as `@Doc { ... }`
+- object-like annotation bodies such as `@FFI.Callback { abi: c; ... }`
+
+## Execution Annotations
+
+These annotations carry direct execution meaning:
+
+- `@Main`
+- `@Runtime`
+- `@Native`
+
+Important current rules:
+
+- `@Main` must identify the single entrypoint
+- duplicate `@Main` is rejected
+- conflicting execution annotations are rejected
+
+## Documentation and Library-Oriented Annotations
+
+`@Doc` appears throughout the examples and construct coverage.
+
+Construct definitions can also declare which annotations are valid in their forms through an `annotations { ... }` section.
+
+## FFI Annotations
+
+These annotations have compiler meaning in the current interop path:
+
+- `@FFI.Extern`
+- `@FFI.Callback`
+- `@FFI.Pointer`
+- `@FFI.Struct`
+- `@FFI.Alias`
+- `@FFI.Array`

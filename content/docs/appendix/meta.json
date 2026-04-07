@@ -1,0 +1,14 @@
+{
+  "title": "Appendix",
+  "pages": [
+    "index",
+    "getting-started",
+    "cli",
+    "toolchains",
+    "ffi-workflows",
+    "diagnostics",
+    "compiler-architecture",
+    "examples",
+    "contributing"
+  ]
+}

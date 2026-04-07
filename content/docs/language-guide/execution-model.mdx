@@ -1,0 +1,68 @@
+---
+title: Execution Model
+description: VM, LLVM/native, hybrid, and how `@Main`, `@Runtime`, and `@Native` shape current Kira execution.
+---
+
+Kira currently has three execution targets.
+
+| Target | What runs | Best for |
+| --- | --- | --- |
+| VM | bytecode under `kira_vm_runtime` | the simplest runnable subset |
+| LLVM/native | native object + host executable | fully native proof targets |
+| hybrid | bytecode plus native shared library | mixed `@Runtime` and `@Native` programs |
+
+## VM
+
+The default `run` path is the VM:
+
+```bash
+kira run examples/hello
+```
+
+Pipeline:
+
+```text
+source -> lexer -> parser -> semantics -> IR -> bytecode -> VM
+```
+
+VM is the simplest backend, but it cannot execute `@Native` functions. The fail corpus proves `KBUILD001` when a native entrypoint is forced through VM execution.
+
+## LLVM / Native
+
+The native path lowers shared IR through the LLVM C API and links a host executable:
+
+```bash
+kira run --backend llvm examples/callbacks
+```
+
+Use it when the program should run natively and the entrypoint is native-capable.
+
+## Hybrid
+
+Hybrid mode makes the mixed model explicit:
+
+- `@Runtime` functions stay in bytecode
+- `@Native` functions compile into native code
+- both sides run in one process through the hybrid runtime and native bridge
+
+Example:
+
+```bash
+kira run --backend hybrid examples/hybrid_roundtrip
+```
+
+Current output:
+
+```text
+native main
+runtime helper
+native helper
+```
+
+## Practical Rule
+
+Read execution annotations this way today:
+
+- VM wants runtime execution only
+- LLVM/native needs a native-capable entrypoint
+- hybrid is the natural home for mixed runtime/native programs, especially FFI-heavy ones

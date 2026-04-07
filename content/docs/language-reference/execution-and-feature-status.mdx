@@ -1,0 +1,32 @@
+---
+title: Execution and Feature Status
+description: A compact status matrix for what Kira parses, semantically checks, and runs today.
+---
+
+## Status Matrix
+
+| Feature | Parsed | Checked | VM | LLVM | Hybrid |
+| --- | --- | --- | --- | --- | --- |
+| `@Main` entrypoint | Yes | Yes | Yes | Yes | Yes |
+| `@Runtime` / `@Native` | Yes | Yes | `@Runtime` only | Yes | Yes |
+| `function` declarations | Yes | Yes | Yes | Yes | Yes |
+| integer and string literals | Yes | Yes | Yes | Yes | Yes |
+| local `let` | Yes | Yes | Yes | Yes | Yes |
+| member access | Yes | Yes | partial/proven narrowly | Yes in native examples | Yes in hybrid/native examples |
+| integer `+` | Yes | Yes | Yes | Yes | Yes |
+| other arithmetic/comparison/logical operators | Yes | Yes | not broadly proven | partial/frontend-documented | partial/frontend-documented |
+| array literals | Yes | Yes | not part of the core lowered subset | not broadly proven | not broadly proven |
+| `if` / `for` / `switch` | Yes | Yes | not part of the small proven core | partial/frontend-documented | partial/frontend-documented |
+| conditional `?:` | Yes | No (`KSEM033`) | No | No | No |
+| construct forms and builder blocks | Yes | Yes | check-oriented only | check-oriented only | check-oriented only |
+| `@FFI.Extern` declarations | Yes | Yes | No | Yes | Yes |
+| callback-typed FFI calls | Yes | Yes | No | Yes | Yes |
+| builtin `print` | Yes | Yes | Yes for proven cases | Yes for proven cases | Yes for proven cases |
+
+## Reading the Matrix
+
+This table is intentionally conservative.
+
+- `Yes` means the repo has direct support and proof for that stage.
+- `partial` means the syntax and semantic model exist, but the manual does not claim broad runnable coverage.
+- `check-oriented only` means the feature is part of the implemented frontend and semantic validation surface, not a claim about today's executable lowering.

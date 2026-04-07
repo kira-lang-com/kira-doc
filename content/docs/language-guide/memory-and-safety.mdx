@@ -1,0 +1,37 @@
+---
+title: Memory and Safety
+description: "The current safety story in Kira: diagnostics, explicit execution boundaries, and the limits of what the repo documents today."
+---
+
+Kira does not currently document a large, finished memory model in the style of ARC-based languages.
+
+## What the Repo Does Document
+
+The present safety story is concrete and implementation-focused:
+
+- explicit type checking
+- diagnostics for ambiguous inference and type mismatches
+- validation of imports, namespaces, callbacks, lifecycle hooks, and construct requirements
+- explicit runtime/native execution boundaries through `@Runtime` and `@Native`
+- explicit interop metadata for pointers, callbacks, structs, aliases, and arrays
+
+## What This Chapter Does Not Claim
+
+This repository does **not** currently document first-class language features for:
+
+- automatic reference counting
+- deinitialization
+- concurrency
+- ownership or borrowing rules for general Kira values
+- access control
+
+When pointer ownership appears in the repo today, it appears as FFI metadata such as `ownership: borrowed`, not as a general-purpose language-wide memory system.
+
+## The Practical Safety Model Today
+
+Kira is safest today when you lean into the boundaries it already proves:
+
+- keep executable code close to the runnable subset
+- use annotations when execution meaning changes
+- let semantics diagnostics reject mismatched or ambiguous programs early
+- treat native interop as an explicit boundary rather than a transparent extension of ordinary Kira code

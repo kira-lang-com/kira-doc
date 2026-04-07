@@ -1,0 +1,66 @@
+---
+title: Properties
+description: Stored members, defaults, `let` versus `var`, `static let`, and assignment to locals or fields.
+---
+
+Kira examples use property-like members inside `type` declarations and construct forms.
+
+## Stored Members
+
+```ts
+type Point {
+    var x: Float = 0.0
+    var y: Float = 0.0
+}
+```
+
+Current member storage forms shown in the repo:
+
+- `let` for immutable stored members
+- `var` for mutable stored members
+- `static let` for type-level constants
+
+## Default Values
+
+Defaults appear naturally in the checked-in examples:
+
+```ts
+type ThemeConfig {
+    let title: String = "Operations";
+    let highlightLevel: Float = 0.8;
+}
+
+type Point {
+    static let zero: Point = Point(x: 0.0, y: 0.0)
+}
+```
+
+## Assignment
+
+Assignments are statements that can target:
+
+- locals
+- fields
+
+Examples from the runnable native examples:
+
+```ts
+state.viewport_width = 128
+state.viewport_height = 128
+desc.width = 640
+```
+
+The semantics layer rejects non-assignable targets with `KSEM046`.
+
+## Properties in Construct Forms
+
+Construct-defined forms also use stored-member syntax:
+
+```ts
+Widget Card(title: String) {
+    @State
+    let selected: Int = 0;
+}
+```
+
+That means the property surface is not limited to plain `type` declarations.

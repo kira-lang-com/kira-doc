@@ -1,0 +1,42 @@
+---
+title: Constructs Reference
+description: Construct sections, construct-defined declaration forms, content sections, and lifecycle validation rules.
+---
+
+## Construct Sections
+
+The current frontend recognizes these construct section families:
+
+- `annotations`
+- `modifiers`
+- `requires`
+- `lifecycle`
+- `builder`
+- `representation`
+- custom sections preserved structurally
+
+## Construct Forms
+
+Construct forms are declarations headed by the construct name:
+
+```ts
+Widget Dashboard(title: String) {
+    content {
+        Kit.Text("Operations")
+    }
+}
+```
+
+## Content Sections
+
+Construct rules can require a `content { ... }` section. Missing required content raises `KSEM022`.
+
+## Lifecycle Hooks
+
+Constructs declare allowed lifecycle hooks inside `lifecycle { ... }`. Using an undeclared hook raises `KSEM021`.
+
+Hooks proven in the repo include:
+
+- `onAppear()`
+- `onDisappear()`
+- `onChange(of: value)`

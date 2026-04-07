@@ -1,0 +1,46 @@
+---
+title: Types
+description: Builtin types, named types, generated FFI types, and current coercion/inference boundaries.
+---
+
+## Builtin Types
+
+The semantics layer resolves these builtin names:
+
+| Group | Names |
+| --- | --- |
+| General | `Void`, `Int`, `Float`, `Bool`, `String` |
+| Fixed-width integers | `I8`, `U8`, `I16`, `U16`, `I32`, `U32`, `I64`, `U64` |
+| Native/FFI helpers | `RawPtr`, `CString`, `CBool` |
+
+## Named Types
+
+Named types are declared with `type`:
+
+```ts
+type Point {
+    var x: Float = 0.0
+    var y: Float = 0.0
+}
+```
+
+Types may contain stored members, defaults, methods, and `static let` members.
+
+## Generated and Annotated Types
+
+Generated bindings and native interop also declare types through `type`, often with FFI annotations:
+
+- callback types
+- pointer wrapper types
+- struct types
+- alias types
+- array metadata types
+
+## Inference and Coercion
+
+Current semantic rules include:
+
+- locals may infer types when the result is unambiguous
+- ambiguous inference raises `KSEM029`
+- some explicit typed contexts allow coercion, such as assigning an integer literal to a `Float`
+- illegal coercions raise a type mismatch diagnostic such as `KSEM031`

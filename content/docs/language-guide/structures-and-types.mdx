@@ -1,0 +1,58 @@
+---
+title: Structures and Types
+description: Named types, builtin types, generated FFI types, and the current record-like role of `type` in Kira.
+---
+
+Kira currently documents named data shapes through `type`.
+
+## Builtin Types
+
+The semantics layer resolves these builtin names today:
+
+| Group | Names |
+| --- | --- |
+| General | `Void`, `Int`, `Float`, `Bool`, `String` |
+| Fixed-width integers | `I8`, `U8`, `I16`, `U16`, `I32`, `U32`, `I64`, `U64` |
+| Native/FFI helpers | `RawPtr`, `CString`, `CBool` |
+
+## Declaring a Type
+
+```ts
+type RevenueSnapshot {
+    let monthLabel: String
+    let gross: Int
+    let net: Int
+}
+```
+
+Types can contain:
+
+- stored members
+- default values
+- `static let` members
+- methods
+
+## FFI-Generated Types
+
+Generated bindings also use `type`, often with compiler-meaning annotations:
+
+```ts
+@FFI.Callback { abi: c; params: [I64, RawPtr]; result: I64; }
+type kira_i64_callback {}
+
+@FFI.Pointer { target: app_state; ownership: borrowed; }
+type app_state_ptr {}
+```
+
+That is why the guide treats named types as a shared surface for both app code and generated interop code.
+
+## What This Chapter Does Not Claim
+
+This repository does not currently document separate first-class language chapters for:
+
+- enumerations
+- classes
+- inheritance
+- protocol-oriented type systems
+
+The present Kira story is narrower and more concrete: `type` is the real, repo-proven named-type form today.

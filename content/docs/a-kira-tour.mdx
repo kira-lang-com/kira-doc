@@ -1,0 +1,128 @@
+---
+title: A Kira Tour
+description: A compact pass through entrypoints, imports, types, constructs, and execution annotations using repo-proven syntax.
+---
+
+This tour shows the current Kira language through the kinds of files the repo already proves.
+
+## A Small Entrypoint
+
+Kira programs pick their entrypoint with `@Main`:
+
+```ts
+@Main
+function main() {
+    let left = 40;
+    let right = 2;
+    let total = left + right;
+    print(total);
+    return;
+}
+```
+
+The current corpus proves this style across `vm`, `llvm`, and `hybrid`.
+
+## Imports and Helper Functions
+
+Imports use qualified names and can declare an alias:
+
+```ts
+import support as Support
+
+@Main
+function main() {
+    helper();
+    print("imports resolve");
+    return;
+}
+
+function helper() {
+    let first = 1;
+    let second = 2;
+    print(first + second);
+    return;
+}
+```
+
+This is the same import shape used by the runnable import corpus and by namespaced bindings such as `bindings.callbacks`.
+
+## Named Types and Members
+
+Kira uses `type` for record-like declarations:
+
+```ts
+type RevenueSnapshot {
+    let monthLabel: String
+    let gross: Int
+    let net: Int
+}
+
+type StoryLane {
+    let width: Float
+    let height: Float
+
+    function area() -> Float {
+        return width * height
+    }
+}
+```
+
+Fields, defaults, `static let`, and methods all appear in the checked-in examples.
+
+## Constructs and Builder-Style Forms
+
+The frontend also understands construct-defined declaration forms:
+
+```ts
+construct Widget {
+    annotations {
+        @State;
+        @Doc;
+    }
+
+    requires {
+        content;
+    }
+
+    lifecycle {
+        onAppear() {}
+    }
+}
+
+Widget Card(title: String) {
+    @State
+    let selected: Int = 0;
+
+    content {
+        "Card"
+    }
+
+    onAppear() {
+        return;
+    }
+}
+```
+
+This is check-only language coverage today, but it is real compiler behavior: the parser models it and semantics validates content requirements and lifecycle hooks.
+
+## Execution Annotations
+
+Execution annotations matter when a program crosses runtime and native boundaries:
+
+```ts
+@Main
+@Native
+function main() {
+    print("native main");
+    runtime_helper();
+    return;
+}
+
+@Runtime
+function runtime_helper() {
+    print("runtime helper");
+    return;
+}
+```
+
+Use the [Language Guide](/docs/language-guide) for the full walkthrough, then keep the [Language Reference](/docs/language-reference) nearby when you need precise rules.

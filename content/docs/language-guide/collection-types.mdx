@@ -1,0 +1,43 @@
+---
+title: Collection Types
+description: Array syntax in the current frontend, where arrays appear today, and what is not yet part of the proven executable subset.
+---
+
+The current frontend understands **array syntax**.
+
+## Array Literals
+
+Examples in the repo use array literals like these:
+
+```ts
+[1, 2, 3]
+[Widget]
+[I64, RawPtr]
+```
+
+Those appear in several different roles:
+
+- ordinary expressions such as `for item in [1, 2, 3]`
+- construct representation fields such as `children: [Widget]`
+- FFI annotation arguments such as `params: [I64, RawPtr]`
+
+## Where Arrays Show Up Today
+
+Arrays are currently most visible in:
+
+- check-only declarative examples
+- construct definitions
+- generated FFI metadata
+
+The book does **not** currently document a broader standard-library collection API for arrays, dictionaries, or sets, because the repo does not prove one.
+
+## Runnable Boundary
+
+Array syntax belongs to the implemented frontend surface, but it is not part of the small executable subset that the guide can treat as broadly runnable today.
+
+That means:
+
+- `kira check`, `ast`, and related frontend-oriented flows can cover array syntax
+- `kira run` and `kira build` still depend on the narrower lowering boundary
+
+When arrays appear in examples such as construct builders or FFI annotations, treat them as real language surface, but not as a promise of general-purpose executable collection support.

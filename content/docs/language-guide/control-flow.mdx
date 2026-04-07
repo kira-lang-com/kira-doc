@@ -1,0 +1,79 @@
+---
+title: Control Flow
+description: If, for, and switch in statement and builder positions, plus the distinction between frontend support and today's runnable subset.
+---
+
+Kira's frontend understands three main control-flow forms:
+
+- `if`
+- `for`
+- `switch`
+
+## Statement Forms
+
+The current parser accepts these in ordinary statement position:
+
+```ts
+if iw <= 0.0 || ih <= 0.0 {
+    return Rect.zero
+}
+
+for item in [1, 2, 3] {
+    print(item)
+}
+
+switch 0 {
+    case 0 {
+        print("primary")
+    }
+    default {
+        print("fallback")
+    }
+}
+```
+
+## Builder Forms
+
+The same language families also appear in builder/content blocks:
+
+```ts
+content {
+    if 0 == 0 {
+        Kit.Badge("Overview")
+    } else {
+        Kit.Badge("Details")
+    }
+
+    for item in [1, 2, 3] {
+        Kit.Row("Dashboard row")
+    }
+
+    switch 0 {
+        case 0 {
+            Kit.Text("Overview panel")
+        }
+        default {
+            Kit.Text("Fallback panel")
+        }
+    }
+}
+```
+
+That construct coverage is one of the clearest examples of Kira's broader frontend surface.
+
+## What to Use in Executable Code
+
+Today, you should read control flow with care:
+
+- the parser models these forms
+- the semantics layer lowers and validates them in the frontend
+- the current executable boundary is intentionally smaller
+
+For code that must definitely run through current backends, stay close to the proven corpus. For richer frontend coverage, `if`, `for`, and `switch` are already real parts of the language.
+
+## A Practical Rule
+
+If you need an executable branch today:
+
+- prefer statement-level `if`
+- avoid ternary expressions, because those are parsed but rejected during lowering

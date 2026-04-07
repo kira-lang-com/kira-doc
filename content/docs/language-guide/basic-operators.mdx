@@ -1,0 +1,69 @@
+---
+title: Basic Operators
+description: Unary, arithmetic, comparison, logical, member, call, and assignment operators in the current Kira implementation.
+---
+
+Kira's parser accepts a familiar operator ladder.
+
+## Operator Families
+
+| Family | Forms |
+| --- | --- |
+| Unary | `-x`, `!x` |
+| Multiplicative | `*`, `/`, `%` |
+| Additive | `+`, `-` |
+| Comparison | `==`, `!=`, `<`, `<=`, `>`, `>=` |
+| Logical | `&&`, `||` |
+| Conditional | `condition ? then : else` |
+| Structural | member access with `.`, calls with `(...)`, assignment with `=` |
+
+## Arithmetic and Comparison Rules
+
+The current semantics layer enforces:
+
+- arithmetic operators require both sides to have the same numeric type
+- comparison operators require both sides to have the same type
+- logical operators require `Bool` on both sides
+
+Examples already checked into the repo:
+
+```ts
+let totalRevenue = baseRevenue + recurringRevenue;
+let containsPoint = point.x <= x + width;
+let hidden = isCompact || isCollapsed;
+```
+
+## Conditional Expressions
+
+The parser understands the ternary form:
+
+```ts
+condition ? thenValue : elseValue
+```
+
+But the semantics pass explicitly rejects it today with `KSEM033` ("conditional expression is not lowered yet"). Use `if` statements in executable code for now.
+
+## Member Access, Calls, and Assignment
+
+Member access and calls are heavily used:
+
+```ts
+callbacks.kira_invoke_callback(add_two, 0, 5)
+Rect(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
+state.viewport_width = 128
+```
+
+Assignments are statements, not general expressions. Current semantic validation only allows the left side to be:
+
+- a local name
+- a field reference
+
+## Runnable Boundary
+
+The parser and semantics layers understand more than the currently proven lowering boundary.
+
+The strongest cross-backend proof today is still integer `+`. Other operators are part of the current language surface, but you should read them with the same status discipline used throughout the guide:
+
+- parsed
+- checked
+- runnable only where the current backend subset proves them

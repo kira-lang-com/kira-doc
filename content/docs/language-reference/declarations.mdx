@@ -1,0 +1,55 @@
+---
+title: Declarations
+description: Import, function, type, construct, and construct-form declarations in the current Kira language surface.
+---
+
+## Top-Level Declarations
+
+The current frontend recognizes these top-level declaration forms:
+
+- `import`
+- `function`
+- `type`
+- `construct`
+- construct-defined forms such as `Widget Card(...) { ... }`
+
+## Imports
+
+Imports use qualified module names with an optional alias:
+
+```ts
+import Support
+import UI as Kit
+import bindings.callbacks as callbacks
+```
+
+Unresolved imports are rejected with `KSEM032`.
+
+## Functions
+
+Function declarations use `function`, a parameter list, an optional `-> ReturnType`, and either:
+
+- a block body
+- a trailing `;` for `@FFI.Extern` declarations
+
+## Types
+
+Type declarations use `type Name { ... }` and may contain:
+
+- stored members
+- methods
+- `static let`
+
+## Constructs and Construct Forms
+
+Construct declarations use `construct Name { ... }`.
+
+Construct-defined forms look like ordinary declarations, but the leading identifier is the construct name:
+
+```ts
+Widget Card(title: String) {
+    content {
+        "Card"
+    }
+}
+```

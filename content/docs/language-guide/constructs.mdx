@@ -1,0 +1,85 @@
+---
+title: Constructs
+description: Construct declarations, construct sections, content blocks, lifecycle hooks, and construct-defined declaration forms.
+---
+
+Constructs let the compiler model library-defined declaration shapes.
+
+## Defining a Construct
+
+```ts
+construct Widget {
+    annotations {
+        @State;
+        @Binding;
+        @Env;
+        @Doc;
+    }
+
+    requires {
+        content;
+    }
+
+    lifecycle {
+        onAppear() {}
+        onDisappear() {}
+        onChange(of: value) {}
+    }
+
+    builder {
+        content;
+    }
+
+    representation {
+        children: [Widget];
+    }
+}
+```
+
+The frontend recognizes these section families today:
+
+- `annotations`
+- `modifiers`
+- `requires`
+- `lifecycle`
+- `builder`
+- `representation`
+- custom sections preserved structurally
+
+## Construct Forms
+
+A construct can introduce its own declaration form:
+
+```ts
+Widget Dashboard(title: String, theme: ThemeConfig) {
+    @State
+    let selectedTab: Int = 0;
+
+    content {
+        Kit.Column("Operations") {
+            Kit.Text("Operations")
+        }
+    }
+
+    onAppear() {
+        return;
+    }
+}
+```
+
+This is real compiler behavior today, even though it is primarily proven through check-only coverage.
+
+## Content Requirements
+
+Construct rules can require a `content { ... }` block. When a form omits required content, the semantics layer raises `KSEM022` ("missing required content block").
+
+## Lifecycle Validation
+
+Constructs also declare which lifecycle hooks are valid. If a form uses an undeclared hook, the semantics layer raises `KSEM021` ("invalid lifecycle hook").
+
+## Why Constructs Matter
+
+Constructs are one of the clearest examples of Kira's intended boundary:
+
+- the compiler provides mechanisms and validation
+- higher-level library behavior still belongs in Kira source
