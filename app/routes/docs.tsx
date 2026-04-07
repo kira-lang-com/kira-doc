@@ -57,8 +57,12 @@ function legacyDocsRedirect(slugs: string[]) {
 }
 
 export async function loader({ params }: Route.LoaderArgs) {
+  try {
+  console.debug("[docs-loader] params:", params);
   const slugs = (params["*"] ?? "").split("/").filter((v) => v.length > 0);
+  console.debug("[docs-loader] slugs:", slugs);
   const legacyPath = legacyDocsRedirect(slugs);
+  console.debug("[docs-loader] legacyPath:", legacyPath);
   if (legacyPath) redirectDocsPath(legacyPath);
 
   const page = source.getPage(slugs);
@@ -69,6 +73,9 @@ export async function loader({ params }: Route.LoaderArgs) {
     markdownUrl: getPageMarkdownUrl(page).url,
     pageTree: await source.serializePageTree(source.getPageTree()),
   };
+  } catch (err) {
+    throw new Error("Docs loader failed: " + (err instanceof Error ? err.message : String(err)));
+  }
 }
 
 const clientLoader = browserCollections.docs.createClientLoader({
