@@ -1,6 +1,6 @@
 # Kira Documentation Site
 
-This app contains the Bun-powered Kira documentation website built with Fumadocs and React Router.
+This app contains the Bun-powered Kira documentation website built with Next.js and Fumadocs.
 
 ## Run Locally
 
@@ -9,7 +9,7 @@ bun install
 bun run dev
 ```
 
-The dev server is served by React Router.
+The dev server is served by Next.js.
 
 ## Build Static Assets
 
@@ -17,7 +17,7 @@ The dev server is served by React Router.
 bun run build
 ```
 
-Static output is written to `build/client`.
+Next builds the app into `.next/`.
 
 ## Preview The Static Build
 
@@ -25,11 +25,11 @@ Static output is written to `build/client`.
 bun run start
 ```
 
-That serves the generated static site from `build/client/`.
+That serves the Next production build from `.next/`.
 
 ## Content Layout
 
-- `app/` contains the React Router routes, home page, shared layout helpers, and search wiring.
+- `app/` contains the Next.js app router pages, layout, shared helpers, and search wiring.
 - `content/docs/` contains the English documentation source in MDX.
 - `source.config.ts` defines the Fumadocs MDX source.
 

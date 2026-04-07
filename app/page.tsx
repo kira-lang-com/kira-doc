@@ -2,14 +2,18 @@ import {
   BookOpenText,
   Cable,
   Command,
-  Cpu,
-  FileCode2,
   Wrench,
 } from "lucide-react";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
-import Link from "fumadocs-core/link";
-import type { Route } from "./+types/home";
+import Link from "next/link";
+import type { Metadata } from "next";
 import { baseOptions } from "@/lib/layout.shared";
+
+export const metadata: Metadata = {
+  title: "Kira Documentation",
+  description:
+    "Documentation for the Kira programming language: compiler, backends, tools, and language reference.",
+};
 
 const guideLinks = [
   {
@@ -38,17 +42,6 @@ const guideLinks = [
     icon: Wrench,
   },
 ];
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Kira Documentation" },
-    {
-      name: "description",
-      content:
-        "Documentation for the Kira programming language: compiler, backends, tools, and language reference.",
-    },
-  ];
-}
 
 export default function Home() {
   return (

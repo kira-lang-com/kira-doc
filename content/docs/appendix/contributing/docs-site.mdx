@@ -11,7 +11,7 @@ apps/docs/
 
 It is a self-contained Bun app built with:
 
-- React Router
+- Next.js App Router
 - Fumadocs
 - Fumadocs MDX source generation
 - static search indexes
@@ -24,14 +24,14 @@ apps/docs/
     components/
     lib/
     llms/
-    routes/
+    api/
   content/docs/
   public/
 ```
 
 Use:
 
-- `app/routes/` for the homepage, docs route shell, search route, and LLM helper routes
+- `app/` for the homepage, docs route shell, API routes, and LLM helper routes
 - `content/docs/` for the actual English documentation pages
 - `meta.json` files to control page order and grouping in the sidebar
 

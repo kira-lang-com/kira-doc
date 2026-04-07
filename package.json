@@ -3,35 +3,31 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "react-router dev",
-    "build": "bunx react-router typegen && bunx fumadocs-mdx && bunx react-router build",
-    "start": "serve -s ./build/client",
-    "typecheck": "bunx react-router typegen && bunx fumadocs-mdx && tsc --noEmit"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@orama/orama": "^3.1.18",
-    "@react-router/node": "7.14.0",
     "fumadocs-core": "16.7.10",
     "fumadocs-mdx": "14.2.11",
     "fumadocs-ui": "16.7.10",
     "isbot": "^5.1.36",
     "lucide-react": "^1.7.0",
+    "next": "^16.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-router": "7.14.0",
     "tailwind-merge": "^3.5.0",
     "tinyglobby": "^0.2.15"
   },
   "devDependencies": {
-    "@react-router/dev": "7.14.0",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/mdx": "^2.0.13",
     "@types/node": "^22",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "serve": "^14.2.6",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5.9.3",
-    "vite": "^8.0.3"
+    "typescript": "^5.9.3"
   }
 }

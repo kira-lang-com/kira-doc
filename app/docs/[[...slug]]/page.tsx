@@ -1,4 +1,5 @@
-import type { Route } from "./+types/docs";
+import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import {
   DocsBody,
@@ -8,22 +9,12 @@ import {
   MarkdownCopyButton,
   ViewOptionsPopover,
 } from "fumadocs-ui/layouts/docs/page";
-import { getPageMarkdownUrl, source } from "@/lib/source";
-import browserCollections from "collections/browser";
+import { getPageMarkdownUrl, source, getSlugsFromParams } from "@/lib/source";
 import { baseOptions } from "@/lib/layout.shared";
 import { gitConfig } from "@/lib/shared";
-import { useFumadocsLoader } from "fumadocs-core/source/client";
 import { useMDXComponents } from "@/components/mdx";
 import { ThemeSwitch } from "fumadocs-ui/layouts/shared/slots/theme-switch";
-
-function redirectDocsPath(path: string) {
-  throw new Response(null, {
-    status: 302,
-    headers: {
-      Location: path,
-    },
-  });
-}
+import browserCollections from "fumadocs-mdx:collections/browser";
 
 function legacyDocsRedirect(slugs: string[]) {
   const joined = slugs.join("/");
@@ -60,38 +51,39 @@ function legacyDocsRedirect(slugs: string[]) {
   return `/docs/${[mapped, ...tail].join("/")}`;
 }
 
-export async function loader({ params }: Route.LoaderArgs) {
-  let slugs = (params["*"] ?? "").split("/").filter((v) => v.length > 0);
-  if (slugs.length === 0) slugs = ["index"];
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug?: string[] }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const slugs = getSlugsFromParams({ slug });
 
-  // Check for legacy redirects
-  if (slugs.length > 0) {
-    const legacyPath = legacyDocsRedirect(slugs);
-    if (legacyPath) redirectDocsPath(legacyPath);
-  }
-
-  // Get the page
   let page = source.getPage(slugs);
   if (!page && slugs[0] === "index") {
-    // Try without index wrapper
     page = source.getPage([]);
   }
 
   if (!page) {
-    if (slugs[0] !== "index") {
-      redirectDocsPath("/docs/");
-    }
-    throw new Error("Index page not found");
+    return { title: "Not Found" };
   }
 
-  // Get page tree
-  const pageTree = await source.serializePageTree(source.getPageTree());
-
   return {
-    path: page.path,
-    markdownUrl: getPageMarkdownUrl(page).url,
-    pageTree,
+    title: page.data.title,
+    description: page.data.description,
   };
+}
+
+export async function generateStaticParams() {
+  const pages = source.getPages();
+  const params = pages.map((page) => ({
+    slug: page.slugs.length === 0 ? [] : page.slugs,
+  }));
+
+  // Include the root docs page
+  params.push({ slug: [] });
+
+  return params;
 }
 
 const clientLoader = browserCollections.docs.createClientLoader({
@@ -107,7 +99,6 @@ const clientLoader = browserCollections.docs.createClientLoader({
   ) {
     return (
       <DocsPage toc={toc}>
-        <title>{frontmatter.title}</title>
         <meta name="description" content={frontmatter.description} />
         <DocsTitle>{frontmatter.title}</DocsTitle>
         <DocsDescription>{frontmatter.description}</DocsDescription>
@@ -126,8 +117,37 @@ const clientLoader = browserCollections.docs.createClientLoader({
   },
 });
 
-export default function Page({ loaderData }: Route.ComponentProps) {
-  const { pageTree, path, markdownUrl } = useFumadocsLoader(loaderData);
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const { slug } = await params;
+  let slugs = getSlugsFromParams({ slug });
+
+  // Check for legacy redirects
+  if (slugs.length > 0) {
+    const legacyPath = legacyDocsRedirect(slugs);
+    if (legacyPath) redirect(legacyPath);
+  }
+
+  // Get the page
+  let page = source.getPage(slugs);
+  if (!page && slugs[0] === "index") {
+    // Try without index wrapper
+    page = source.getPage([]);
+  }
+
+  if (!page) {
+    if (slugs[0] !== "index") {
+      redirect("/docs/");
+    }
+    notFound();
+  }
+
+  // Get page tree
+  const pageTree = source.getPageTree();
+  const markdownUrl = getPageMarkdownUrl(page).url;
 
   return (
     <DocsLayout
@@ -135,7 +155,10 @@ export default function Page({ loaderData }: Route.ComponentProps) {
       tree={pageTree}
       sidebar={{
         footer: (
-          <div className="inline-flex w-full items-center gap-2 rounded-lg border bg-fd-secondary/50 p-1.5 ps-2 text-sm text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground">
+          <div
+            key="sidebar-footer"
+            className="inline-flex w-full items-center gap-2 rounded-lg border bg-fd-secondary/50 p-1.5 ps-2 text-sm text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+          >
             <a
               href={`https://github.com/${gitConfig.user}/${gitConfig.repo}`}
               target="_blank"
@@ -152,15 +175,15 @@ export default function Page({ loaderData }: Route.ComponentProps) {
               </svg>
               GitHub
             </a>
-            <span className="text-fd-muted-foreground">Kira Docs</span>
+            <span className="text-fd-muted-foreground">Kira Code</span>
             <ThemeSwitch className="ms-auto border-0 p-0 *:rounded-md" />
           </div>
         ),
       }}
     >
-      {clientLoader.useContent(path, {
+      {clientLoader.useContent(page.path, {
         markdownUrl,
-        path,
+        path: page.path,
       })}
     </DocsLayout>
   );
