@@ -61,85 +61,37 @@ function legacyDocsRedirect(slugs: string[]) {
 }
 
 export async function loader({ params }: Route.LoaderArgs) {
-  try {
-    console.debug("[docs-loader] params:", params);
-    let slugs = (params["*"] ?? "").split("/").filter((v) => v.length > 0);
-    console.debug("[docs-loader] slugs:", slugs);
+  let slugs = (params["*"] ?? "").split("/").filter((v) => v.length > 0);
+  if (slugs.length === 0) slugs = ["index"];
 
-    // Check for legacy redirects only if slugs is not empty
-    if (slugs.length > 0) {
-      const legacyPath = legacyDocsRedirect(slugs);
-      console.debug("[docs-loader] legacyPath:", legacyPath);
-      if (legacyPath) redirectDocsPath(legacyPath);
-    }
-
-    // Try to find the page with the slugs, or try with ["index"] if empty
-    let page = source.getPage(slugs);
-    if (!page && slugs.length === 0) {
-      // For index, fumadocs may use [] (empty array) or ["index"]
-      page = source.getPage(["index"]);
-    }
-
-    if (!page) {
-      // If still no page and we're not already at index, redirect to index
-      if (slugs.length > 0) {
-        redirectDocsPath("/docs/");
-      } else {
-        throw new Error(
-          "Index page not found - no root documentation page available",
-        );
-      }
-    }
-
-    // Ensure page has required properties
-    if (!page || !page.path) {
-      throw new Error("Page data invalid or missing path property");
-    }
-
-    const markdownUrlObj = getPageMarkdownUrl(page);
-    if (!markdownUrlObj?.url) {
-      throw new Error("Failed to generate markdown URL for page");
-    }
-
-    let pageTree = null;
-    try {
-      const rawPageTree = source.getPageTree();
-      if (rawPageTree) {
-        pageTree = await source.serializePageTree(rawPageTree);
-      }
-    } catch (treeErr) {
-      console.error("[docs-loader] Failed to serialize page tree:", treeErr);
-      // Don't throw on page tree error - it's optional, use null fallback
-      pageTree = null;
-    }
-
-    const result = {
-      path: page.path,
-      markdownUrl: markdownUrlObj.url,
-      pageTree: pageTree,
-    };
-
-    // Ensure result is serializable by JSON
-    try {
-      JSON.stringify(result);
-    } catch (serializeErr) {
-      console.error("[docs-loader] Result not serializable:", serializeErr);
-      throw new Error("Loader result not JSON serializable");
-    }
-
-    return result;
-  } catch (err) {
-    // Be defensive: some environments may wrap Response-like errors differently
-    const isResp =
-      typeof err === "object" &&
-      err !== null &&
-      "status" in (err as any) &&
-      typeof (err as any).status === "number";
-    if (isResp) throw err as Response;
-    const errorMsg = err instanceof Error ? err.message : String(err);
-    console.error("[docs-loader] Error:", errorMsg);
-    throw new Error(`Docs loader failed: ${errorMsg}`);
+  // Check for legacy redirects
+  if (slugs.length > 0) {
+    const legacyPath = legacyDocsRedirect(slugs);
+    if (legacyPath) redirectDocsPath(legacyPath);
   }
+
+  // Get the page
+  let page = source.getPage(slugs);
+  if (!page && slugs[0] === "index") {
+    // Try without index wrapper
+    page = source.getPage([]);
+  }
+
+  if (!page) {
+    if (slugs[0] !== "index") {
+      redirectDocsPath("/docs/");
+    }
+    throw new Error("Index page not found");
+  }
+
+  // Get page tree
+  const pageTree = await source.serializePageTree(source.getPageTree());
+
+  return {
+    path: page.path,
+    markdownUrl: getPageMarkdownUrl(page).url,
+    pageTree,
+  };
 }
 
 const clientLoader = browserCollections.docs.createClientLoader({
