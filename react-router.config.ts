@@ -9,12 +9,8 @@ export default {
   future: {
     v8_middleware: true,
   },
-  async prerender({ getStaticPaths }) {
-    const paths: string[] = [];
-
-    for (const path of getStaticPaths()) {
-      paths.push(path);
-    }
+  async prerender() {
+    const paths: string[] = ["/"];
 
     for (const entry of await glob("**/*.mdx", { cwd: "content/docs" })) {
       const slugs = getSlugs(entry);
