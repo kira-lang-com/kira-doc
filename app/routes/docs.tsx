@@ -101,27 +101,33 @@ export async function loader({ params }: Route.LoaderArgs) {
       throw new Error("Failed to generate markdown URL for page");
     }
 
-    let pageTree;
+    let pageTree = null;
     try {
-      pageTree = source.getPageTree();
-      if (!pageTree) {
-        throw new Error("Page tree is null or undefined");
+      const rawPageTree = source.getPageTree();
+      if (rawPageTree) {
+        pageTree = await source.serializePageTree(rawPageTree);
       }
-      pageTree = await source.serializePageTree(pageTree);
     } catch (treeErr) {
       console.error("[docs-loader] Failed to serialize page tree:", treeErr);
-      throw new Error(
-        `Failed to serialize page tree: ${
-          treeErr instanceof Error ? treeErr.message : String(treeErr)
-        }`,
-      );
+      // Don't throw on page tree error - it's optional, use null fallback
+      pageTree = null;
     }
 
-    return {
+    const result = {
       path: page.path,
       markdownUrl: markdownUrlObj.url,
-      pageTree,
+      pageTree: pageTree,
     };
+
+    // Ensure result is serializable by JSON
+    try {
+      JSON.stringify(result);
+    } catch (serializeErr) {
+      console.error("[docs-loader] Result not serializable:", serializeErr);
+      throw new Error("Loader result not JSON serializable");
+    }
+
+    return result;
   } catch (err) {
     // Be defensive: some environments may wrap Response-like errors differently
     const isResp =
