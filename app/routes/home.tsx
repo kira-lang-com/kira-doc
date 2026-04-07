@@ -1,4 +1,11 @@
-import { BookOpenText, Cable, Command, Cpu, FileCode2, Wrench } from "lucide-react";
+import {
+  BookOpenText,
+  Cable,
+  Command,
+  Cpu,
+  FileCode2,
+  Wrench,
+} from "lucide-react";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
 import Link from "fumadocs-core/link";
 import type { Route } from "./+types/home";
@@ -6,59 +13,30 @@ import { baseOptions } from "@/lib/layout.shared";
 
 const guideLinks = [
   {
-    title: "Read the Book",
+    title: "Read the Docs",
     href: "/docs",
-    description: "Start at The Kira Programming Language and read the manual in order.",
-    icon: Wrench,
+    description: "Start at the main documentation and read through in order.",
+    icon: BookOpenText,
   },
   {
-    title: "A Kira Tour",
+    title: "A Quick Tour",
     href: "/docs/a-kira-tour",
-    description: "Take a compact guided pass through entrypoints, imports, types, and constructs.",
-    icon: BookOpenText,
+    description:
+      "Get a fast overview of syntax, types, and key language features.",
+    icon: Cable,
   },
   {
     title: "Language Guide",
     href: "/docs/language-guide",
-    description: "Learn the current language surface chapter by chapter, in a Swift-style flow.",
-    icon: Cable,
-  },
-  {
-    title: "Appendix",
-    href: "/docs/appendix",
-    description: "Find operational material for the CLI, FFI workflows, toolchains, examples, and diagnostics.",
+    description: "Detailed walkthrough of how the language works.",
     icon: Command,
   },
-];
-
-const backendCards = [
   {
-    icon: Cpu,
-    title: "VM",
-    body: "The default backend compiles Kira IR to bytecode and runs it in the repo's VM runtime.",
-  },
-  {
-    icon: FileCode2,
-    title: "LLVM Native",
-    body: "The native path lowers the same IR through the LLVM C API and links a host executable.",
-  },
-  {
-    icon: Cable,
-    title: "Hybrid",
-    body: "Keeps @Runtime functions in bytecode and @Native functions in a shared library — one process.",
-  },
-  {
+    title: "Reference & Tools",
+    href: "/docs/appendix",
+    description: "CLI commands, FFI workflows, toolchain info, and examples.",
     icon: Wrench,
-    title: "Toolchain",
-    body: "Managed LLVM installs under ~/.kira/toolchains/, fetched by kira-bootstrapper fetch-llvm.",
   },
-];
-
-const proofPoints = [
-  "Managed Kira toolchain installs under ~/.kira/toolchains/<channel>/<version>/",
-  "Pinned LLVM bundles under ~/.kira/toolchains/llvm/<llvm-version>/<host>/",
-  "Generated bindings emitted as .kira files next to examples and tests",
-  "Callbacks, Sokol proofs, and hybrid roundtrips all have corpus coverage",
 ];
 
 export function meta({}: Route.MetaArgs) {
@@ -67,7 +45,7 @@ export function meta({}: Route.MetaArgs) {
     {
       name: "description",
       content:
-        "The Kira Programming Language: a language-manual-first guide to the current Kira Zig toolchain, language surface, reference, and appendix workflows.",
+        "Documentation for the Kira programming language: compiler, backends, tools, and language reference.",
     },
   ];
 }
@@ -76,59 +54,80 @@ export default function Home() {
   return (
     <HomeLayout {...baseOptions()}>
       <div className="kira-home-content mx-auto flex w-full flex-1 flex-col gap-14 px-4 py-10 md:px-6 md:py-16">
-
         {/* ── Hero ─────────────────────────────────────────────── */}
         <section className="flex flex-col gap-7">
-          <div className="kira-kicker">Kira language and toolchain</div>
+          <div className="kira-kicker">Kira Language</div>
           <h1 className="kira-display max-w-2xl text-4xl font-bold leading-[1.15] text-fd-foreground md:text-5xl">
-            Read Kira as one language book, not a pile of disconnected notes.
+            A compiler with multiple execution backends.
           </h1>
-          <p className="max-w-xl text-base leading-7 text-fd-muted-foreground md:text-lg md:leading-8">
-            A Zig-hosted compiler with VM, LLVM native, and hybrid backends. Managed LLVM
-            toolchains, construct-aware frontend coverage, and a manifest-driven C ABI FFI
-            system. The docs now read as a single manual that documents what exists in this
-            repo today.
+          <p className="max-w-2xl text-base leading-7 text-fd-muted-foreground md:text-lg md:leading-8">
+            Kira is a programming language with a bytecode VM backend, LLVM
+            native compilation, and hybrid execution. It includes a managed
+            toolchain, a C FFI system with automatic bindings, and comprehensive
+            documentation covering language features and workflows.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-2">
             <Link className="kira-button kira-button-primary" href="/docs">
-              Read the Book
+              Read the Docs
             </Link>
             <Link className="kira-button" href="/docs/a-kira-tour">
-              A Kira Tour
-            </Link>
-            <Link className="kira-button" href="/docs/language-guide">
-              Language Guide
-            </Link>
-            <Link className="kira-button" href="/docs/appendix">
-              Appendix
+              Quick Tour
             </Link>
           </div>
         </section>
 
-        {/* ── Backends ─────────────────────────────────────────── */}
-        <section>
-          <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-fd-muted-foreground">
-            Backends
-          </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {backendCards.map(({ icon: Icon, title, body }) => (
-              <article key={title} className="kira-panel flex flex-col gap-3">
-                <span className="flex size-8 items-center justify-center rounded-lg border border-fd-border bg-fd-muted text-fd-primary">
-                  <Icon className="size-4" />
-                </span>
-                <div>
-                  <h3 className="kira-display text-sm font-semibold text-fd-foreground">{title}</h3>
-                  <p className="mt-1 text-sm leading-6 text-fd-muted-foreground">{body}</p>
-                </div>
-              </article>
-            ))}
+        {/* ── Info ─────────────────────────────────────────────── */}
+        <section className="flex flex-col gap-6 md:grid md:grid-cols-2 md:gap-8">
+          <div>
+            <h2 className="mb-3 text-lg font-semibold text-fd-foreground">
+              Execution Backends
+            </h2>
+            <p className="mb-4 text-sm leading-6 text-fd-muted-foreground">
+              Choose how your code runs. The VM backend is great for development
+              and testing. LLVM native compilation produces standalone
+              executables and libraries. The hybrid backend lets you mix
+              bytecode and native code in the same process.
+            </p>
+            <ul className="space-y-2 text-sm text-fd-muted-foreground">
+              <li>
+                • <strong>VM:</strong> Bytecode interpreter
+              </li>
+              <li>
+                • <strong>LLVM Native:</strong> Native executables and libraries
+              </li>
+              <li>
+                • <strong>Hybrid:</strong> Mix bytecode and native in one
+                process
+              </li>
+              <li>
+                • <strong>Toolchain:</strong> Managed LLVM versions
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="mb-3 text-lg font-semibold text-fd-foreground">
+              Key Features
+            </h2>
+            <ul className="space-y-2 text-sm text-fd-muted-foreground">
+              <li>
+                • Multiple backends: VM, native via LLVM, and hybrid execution
+              </li>
+              <li>
+                • FFI system with C ABI support and auto-generated bindings
+              </li>
+              <li>• Managed toolchain with pinned LLVM versions</li>
+              <li>
+                • Examples covering callbacks, graphics (Sokol), and runtime
+                interop
+              </li>
+            </ul>
           </div>
         </section>
 
-        {/* ── Guides ───────────────────────────────────────────── */}
+        {/* ── Documentation ────────────────────────────────────── */}
         <section>
-          <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-fd-muted-foreground">
-            Guides
+          <h2 className="mb-6 text-xs font-bold uppercase tracking-widest text-fd-muted-foreground">
+            Documentation
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {guideLinks.map(({ icon: Icon, title, href, description }) => (
@@ -137,31 +136,17 @@ export default function Home() {
                   <span className="flex size-8 items-center justify-center rounded-lg border border-fd-border bg-fd-muted text-fd-primary">
                     <Icon className="size-4" />
                   </span>
-                  <h3 className="kira-display text-sm font-semibold text-fd-foreground">{title}</h3>
+                  <h3 className="kira-display text-sm font-semibold text-fd-foreground">
+                    {title}
+                  </h3>
                 </div>
-                <p className="text-sm leading-6 text-fd-muted-foreground">{description}</p>
+                <p className="text-sm leading-6 text-fd-muted-foreground">
+                  {description}
+                </p>
               </Link>
             ))}
           </div>
         </section>
-
-        {/* ── In the repo today ─────────────────────────────────── */}
-        <section>
-          <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-fd-muted-foreground">
-            In the repo today
-          </h2>
-          <ul className="grid gap-2 sm:grid-cols-2">
-            {proofPoints.map((item) => (
-              <li
-                key={item}
-                className="rounded-lg border border-fd-border bg-fd-card px-4 py-3 text-sm leading-6 text-fd-muted-foreground"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
-
       </div>
     </HomeLayout>
   );

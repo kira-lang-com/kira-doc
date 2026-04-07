@@ -10,61 +10,61 @@
 :root {
   color-scheme: light;
 
-  --color-fd-background:           #fcfaf4;
-  --color-fd-foreground:           #201a13;
-  --color-fd-muted:                #f2eadb;
-  --color-fd-muted-foreground:     #7c6248;
-  --color-fd-popover:              #fffdf7;
-  --color-fd-popover-foreground:   #201a13;
-  --color-fd-card:                 #fefcf5;
-  --color-fd-card-foreground:      #201a13;
-  --color-fd-border:               rgba(43, 31, 12, 0.1);
-  --color-fd-primary:              #b76418;
-  --color-fd-primary-foreground:   #fff9f1;
-  --color-fd-secondary:            rgba(183, 100, 24, 0.08);
+  --color-fd-background: #fcfaf4;
+  --color-fd-foreground: #201a13;
+  --color-fd-muted: #f2eadb;
+  --color-fd-muted-foreground: #7c6248;
+  --color-fd-popover: #fffdf7;
+  --color-fd-popover-foreground: #201a13;
+  --color-fd-card: #fefcf5;
+  --color-fd-card-foreground: #201a13;
+  --color-fd-border: rgba(43, 31, 12, 0.1);
+  --color-fd-primary: #b76418;
+  --color-fd-primary-foreground: #fff9f1;
+  --color-fd-secondary: rgba(183, 100, 24, 0.08);
   --color-fd-secondary-foreground: #201a13;
-  --color-fd-accent:               rgba(183, 100, 24, 0.1);
-  --color-fd-accent-foreground:    #201a13;
-  --color-fd-ring:                 rgba(183, 100, 24, 0.4);
-  --color-fd-overlay:              rgba(0, 0, 0, 0.3);
+  --color-fd-accent: rgba(183, 100, 24, 0.1);
+  --color-fd-accent-foreground: #201a13;
+  --color-fd-ring: rgba(183, 100, 24, 0.4);
+  --color-fd-overlay: rgba(0, 0, 0, 0.3);
 
   /* Kira brand tokens used in custom classes */
-  --kira-amber:       #b76418;
+  --kira-amber: #b76418;
   --kira-amber-hover: #cf7a27;
-  --kira-amber-text:  #fff9f1;
+  --kira-amber-text: #fff9f1;
 }
 
 .dark {
   color-scheme: dark;
 
-  --color-fd-background:           #131009;
-  --color-fd-foreground:           #efe7d5;
-  --color-fd-muted:                #1c160d;
-  --color-fd-muted-foreground:     #a8937a;
-  --color-fd-popover:              #18130a;
-  --color-fd-popover-foreground:   #e8d8c4;
-  --color-fd-card:                 #1a1409;
-  --color-fd-card-foreground:      #efe7d5;
-  --color-fd-border:               rgba(239, 231, 213, 0.1);
-  --color-fd-primary:              #d98534;
-  --color-fd-primary-foreground:   #fff9f1;
-  --color-fd-secondary:            rgba(217, 133, 52, 0.12);
+  --color-fd-background: #131009;
+  --color-fd-foreground: #efe7d5;
+  --color-fd-muted: #1c160d;
+  --color-fd-muted-foreground: #a8937a;
+  --color-fd-popover: #18130a;
+  --color-fd-popover-foreground: #e8d8c4;
+  --color-fd-card: #1a1409;
+  --color-fd-card-foreground: #efe7d5;
+  --color-fd-border: rgba(239, 231, 213, 0.1);
+  --color-fd-primary: #d98534;
+  --color-fd-primary-foreground: #fff9f1;
+  --color-fd-secondary: rgba(217, 133, 52, 0.12);
   --color-fd-secondary-foreground: #efe7d5;
-  --color-fd-accent:               rgba(217, 133, 52, 0.15);
-  --color-fd-accent-foreground:    #efe7d5;
-  --color-fd-ring:                 rgba(217, 133, 52, 0.4);
-  --color-fd-overlay:              rgba(0, 0, 0, 0.5);
+  --color-fd-accent: rgba(217, 133, 52, 0.15);
+  --color-fd-accent-foreground: #efe7d5;
+  --color-fd-ring: rgba(217, 133, 52, 0.4);
+  --color-fd-overlay: rgba(0, 0, 0, 0.5);
 
-  --kira-amber:       #d98534;
+  --kira-amber: #d98534;
   --kira-amber-hover: #e09540;
-  --kira-amber-text:  #fff9f1;
+  --kira-amber-text: #fff9f1;
 }
 
 /* neutral.css overrides the sidebar in dark mode with neutral grays — restore
    our warm palette so the sidebar stays consistent. */
 .dark #nd-sidebar {
-  --color-fd-muted:            #1c160d;
-  --color-fd-secondary:        rgba(217, 133, 52, 0.12);
+  --color-fd-muted: #1c160d;
+  --color-fd-secondary: rgba(217, 133, 52, 0.12);
   --color-fd-muted-foreground: #a8937a;
 }
 
@@ -98,15 +98,31 @@ html > body[data-scroll-locked] {
 body {
   font-family: "IBM Plex Sans", sans-serif;
   background:
-    radial-gradient(circle at top right, rgba(196, 116, 28, 0.15), transparent 32rem),
-    radial-gradient(circle at bottom left, rgba(63, 124, 120, 0.08), transparent 28rem),
+    radial-gradient(
+      circle at top right,
+      rgba(196, 116, 28, 0.15),
+      transparent 32rem
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(63, 124, 120, 0.08),
+      transparent 28rem
+    ),
     linear-gradient(180deg, #fcfaf4 0%, #f4efdf 100%);
 }
 
 html.dark body {
   background:
-    radial-gradient(circle at top right, rgba(196, 116, 28, 0.07), transparent 32rem),
-    radial-gradient(circle at bottom left, rgba(63, 124, 120, 0.04), transparent 28rem),
+    radial-gradient(
+      circle at top right,
+      rgba(196, 116, 28, 0.07),
+      transparent 32rem
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(63, 124, 120, 0.04),
+      transparent 28rem
+    ),
     linear-gradient(180deg, #131009 0%, #1a1208 100%);
 }
 
@@ -229,8 +245,8 @@ samp {
 }
 
 .kira-button:hover {
-  background: color-mix(in srgb, var(--color-fd-card) 60%, var(--color-fd-background) 40%);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-fd-foreground) 8%, transparent);
+  background: var(--color-fd-card);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
@@ -242,7 +258,6 @@ samp {
 
 .kira-button-primary:hover {
   background: var(--kira-amber-hover);
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--kira-amber) 35%, transparent);
 }
 
 .kira-panel {
@@ -267,7 +282,8 @@ samp {
 
 .kira-link-card:hover {
   border-color: color-mix(in srgb, var(--kira-amber) 40%, transparent);
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--color-fd-foreground) 6%, transparent);
+  box-shadow: 0 6px 20px
+    color-mix(in srgb, var(--color-fd-foreground) 6%, transparent);
   transform: translateY(-1px);
 }
 
