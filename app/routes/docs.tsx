@@ -91,10 +91,36 @@ export async function loader({ params }: Route.LoaderArgs) {
       }
     }
 
+    // Ensure page has required properties
+    if (!page || !page.path) {
+      throw new Error("Page data invalid or missing path property");
+    }
+
+    const markdownUrlObj = getPageMarkdownUrl(page);
+    if (!markdownUrlObj?.url) {
+      throw new Error("Failed to generate markdown URL for page");
+    }
+
+    let pageTree;
+    try {
+      pageTree = source.getPageTree();
+      if (!pageTree) {
+        throw new Error("Page tree is null or undefined");
+      }
+      pageTree = await source.serializePageTree(pageTree);
+    } catch (treeErr) {
+      console.error("[docs-loader] Failed to serialize page tree:", treeErr);
+      throw new Error(
+        `Failed to serialize page tree: ${
+          treeErr instanceof Error ? treeErr.message : String(treeErr)
+        }`,
+      );
+    }
+
     return {
       path: page.path,
-      markdownUrl: getPageMarkdownUrl(page).url,
-      pageTree: await source.serializePageTree(source.getPageTree()),
+      markdownUrl: markdownUrlObj.url,
+      pageTree,
     };
   } catch (err) {
     // Be defensive: some environments may wrap Response-like errors differently
@@ -104,10 +130,9 @@ export async function loader({ params }: Route.LoaderArgs) {
       "status" in (err as any) &&
       typeof (err as any).status === "number";
     if (isResp) throw err as Response;
-    throw new Error(
-      "Docs loader failed: " +
-        (err instanceof Error ? err.message : String(err)),
-    );
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error("[docs-loader] Error:", errorMsg);
+    throw new Error(`Docs loader failed: ${errorMsg}`);
   }
 }
 
