@@ -59,7 +59,8 @@ function legacyDocsRedirect(slugs: string[]) {
 export async function loader({ params }: Route.LoaderArgs) {
   try {
   console.debug("[docs-loader] params:", params);
-  const slugs = (params["*"] ?? "").split("/").filter((v) => v.length > 0);
+  let slugs = (params["*"] ?? "").split("/").filter((v) => v.length > 0);
+  if (slugs.length === 0) slugs = ["index"];
   console.debug("[docs-loader] slugs:", slugs);
   const legacyPath = legacyDocsRedirect(slugs);
   console.debug("[docs-loader] legacyPath:", legacyPath);
