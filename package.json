@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router typegen && fumadocs-mdx && react-router build",
+    "build": "bunx react-router typegen && bunx fumadocs-mdx && bunx react-router build",
     "start": "serve ./build/client",
-    "typecheck": "react-router typegen && fumadocs-mdx && tsc --noEmit"
+    "typecheck": "bunx react-router typegen && bunx fumadocs-mdx && tsc --noEmit"
   },
   "dependencies": {
     "@orama/orama": "^3.1.18",
