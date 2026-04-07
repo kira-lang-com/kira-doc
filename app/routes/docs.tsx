@@ -67,7 +67,9 @@ export async function loader({ params }: Route.LoaderArgs) {
   if (legacyPath) redirectDocsPath(legacyPath);
 
   const page = source.getPage(slugs);
-  if (!page) throw new Response("Not found", { status: 404 });
+  if (!page) {
+    redirectDocsPath("/docs/index");
+  }
 
   return {
     path: page.path,
@@ -75,6 +77,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     pageTree: await source.serializePageTree(source.getPageTree()),
   };
   } catch (err) {
+    if (err instanceof Response) throw err;
     throw new Error("Docs loader failed: " + (err instanceof Error ? err.message : String(err)));
   }
 }
