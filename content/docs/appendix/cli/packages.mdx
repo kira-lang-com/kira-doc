@@ -1,6 +1,6 @@
 ---
-title: Package Management
-description: The current Kira package workflow, lockfile model, built-in Foundation package, and supported dependency sources.
+title: Libraries and Package Management
+description: Create library packages, add them to existing apps or libraries, and understand the current lockfile-backed Kira package workflow.
 ---
 
 ## Built-in Foundation
@@ -102,3 +102,73 @@ Consumers then import it with:
 ```kira
 import GraphicsKit
 ```
+
+## Adding A Library To An Existing Application
+
+If you already have an app and want to add a library dependency, edit the app
+package manifest or use the CLI helper.
+
+For a registry package:
+
+```bash
+kira add FrostUI
+```
+
+For a local path library:
+
+```toml
+[dependencies]
+GraphicsKit = { path = "../GraphicsKit" }
+```
+
+For a pinned git library:
+
+```bash
+kira add --git https://github.com/Sunlight-Horizon/GameKit.git --rev a1b2c3d4 GameKit
+```
+
+Then sync and build:
+
+```bash
+kira sync
+kira run
+```
+
+Imports from the app look like:
+
+```kira
+import GraphicsKit
+```
+
+## Adding A Library To An Existing Library
+
+Library packages use the same dependency model as apps. Add the dependency to
+the library package's own `kira.toml`, then sync:
+
+```toml
+[dependencies]
+Colors = { path = "../Colors" }
+```
+
+```bash
+kira sync
+```
+
+That allows one library package to build on top of another while keeping the
+dependency graph explicit and lockfile-backed.
+
+## Suggested Layout For A Local Library
+
+```text
+GraphicsKit/
+  kira.toml
+  app/
+    graphicskit.kira
+    Color/
+      palette.kira
+```
+
+With that shape:
+
+- `import GraphicsKit` resolves the root library module
+- `import GraphicsKit.Color.palette` resolves a descendant module in the same package tree
