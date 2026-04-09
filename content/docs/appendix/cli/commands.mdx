@@ -137,9 +137,20 @@ Prints package metadata and archive contents in a human-readable form.
 
 ```bash
 kira new <Name> <destination>
+kira new --lib <Name> <destination>
 ```
 
-Copies the current managed app template into the destination and substitutes the app name into the template files.
+Scaffolds either an app or a library package.
+
+- `kira new DemoApp generated/DemoApp` creates an app template
+- `kira new --lib GraphicsKit generated/GraphicsKit` creates a library template
+
+The library scaffold includes:
+
+- `kira.toml`
+- `kind = "library"`
+- `module_root = "GraphicsKit"`
+- `app/graphicskit.kira` as the root module file
 
 ## `version`
 

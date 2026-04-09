@@ -70,6 +70,7 @@ Re-running `kira sync` without graph changes keeps the lockfile stable.
 ## Core Commands
 
 ```bash
+kira new --lib GraphicsKit generated/GraphicsKit
 kira sync
 kira add FrostUI
 kira add --git https://github.com/Sunlight-Horizon/GameKit.git --rev a1b2c3d4 GameKit
@@ -80,3 +81,24 @@ kira package inspect generated/Hello-0.1.0.tar
 ```
 
 `run`, `build`, and `check` automatically sync first. Add `--offline` for cache-only work and `--locked` when you want to require the current lockfile state exactly.
+
+## Creating A Library
+
+Use the CLI:
+
+```bash
+kira new --lib GraphicsKit generated/GraphicsKit
+```
+
+That scaffold creates:
+
+- `kira.toml`
+- `kind = "library"`
+- `module_root = "GraphicsKit"`
+- `app/graphicskit.kira`
+
+Consumers then import it with:
+
+```kira
+import GraphicsKit
+```
