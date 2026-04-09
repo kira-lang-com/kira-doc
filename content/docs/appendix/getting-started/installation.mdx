@@ -17,6 +17,8 @@ That gives you two things:
 - the launcher at `zig-out/bin/kira`
 - the active managed Kira toolchain under `~/.kira/toolchains/<channel>/<version>/`
 
+Every managed install now also bundles the built-in `Foundation` package.
+
 The repo currently installs the real CLI binary as `kirac` inside that managed toolchain, while `kira` is the path-facing launcher that forwards into the active toolchain.
 
 ## Install The Active Toolchain
@@ -44,6 +46,7 @@ The managed layout is:
     0.1.0/
       bin/
         kirac
+      foundation/
       templates/
       llvm-metadata.toml
   llvm/
@@ -126,7 +129,7 @@ kira new DemoApp generated/DemoApp
 
 The current template is intentionally minimal:
 
-- `project.toml`
+- `kira.toml`
 - `app/main.kira`
 - a starter `@Main` function that prints a message
 

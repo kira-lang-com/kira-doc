@@ -19,6 +19,8 @@ geometry demo
 12
 30
 25
+hello
+Color(r: 255, g: 0, b: 0)
 ```
 
 ## Core Commands
@@ -39,6 +41,8 @@ What they do:
 - `tokens` dumps lexer tokens
 - `ast` dumps the parsed AST
 
+The default VM path now prints richer runtime values than the earlier bootstrap subset, including named struct values.
+
 ## Choose A Backend Explicitly
 
 The CLI supports three execution targets:
@@ -54,6 +58,8 @@ The repo currently proves all three paths:
 - VM: `examples/hello`, `examples/arithmetic`, `examples/imports_demo`, and similar subset programs
 - LLVM/native: native callbacks and Sokol proofs
 - hybrid: mixed `@Runtime` and `@Native` programs plus hybrid FFI tests
+
+Today, the broadest `print(...)` surface lives on the VM/default execution path. Native and hybrid backends still have a narrower runtime print surface while their lowering/runtime support catches up.
 
 ## Build Artifacts
 

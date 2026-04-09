@@ -10,7 +10,7 @@ description: A compact status matrix for what Kira parses, semantically checks, 
 | `@Main` entrypoint | Yes | Yes | Yes | Yes | Yes |
 | `@Runtime` / `@Native` | Yes | Yes | `@Runtime` only | Yes | Yes |
 | `function` declarations | Yes | Yes | Yes | Yes | Yes |
-| integer and string literals | Yes | Yes | Yes | Yes | Yes |
+| integer, float, string, and boolean runtime values | Yes | Yes | VM proven | partial/native-specific | partial/hybrid-specific |
 | local `let` | Yes | Yes | Yes | Yes | Yes |
 | member access | Yes | Yes | partial/proven narrowly | Yes in native examples | Yes in hybrid/native examples |
 | integer `+` | Yes | Yes | Yes | Yes | Yes |
@@ -21,7 +21,8 @@ description: A compact status matrix for what Kira parses, semantically checks, 
 | construct forms and builder blocks | Yes | Yes | check-oriented only | check-oriented only | check-oriented only |
 | `@FFI.Extern` declarations | Yes | Yes | No | Yes | Yes |
 | callback-typed FFI calls | Yes | Yes | No | Yes | Yes |
-| builtin `print` | Yes | Yes | Yes for proven cases | Yes for proven cases | Yes for proven cases |
+| builtin `print` | Yes | Yes | Yes for scalars, pointers, and named struct values | narrower proven subset | narrower proven subset |
+| named struct construction | Yes | Yes | Yes on the VM/default path | not yet broadly proven | not yet broadly proven |
 
 ## Reading the Matrix
 
@@ -30,3 +31,5 @@ This table is intentionally conservative.
 - `Yes` means the repo has direct support and proof for that stage.
 - `partial` means the syntax and semantic model exist, but the manual does not claim broad runnable coverage.
 - `check-oriented only` means the feature is part of the implemented frontend and semantic validation surface, not a claim about today's executable lowering.
+
+For the current repo state, the VM/default execution path has the broadest printable runtime value surface.

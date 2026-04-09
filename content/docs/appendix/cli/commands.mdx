@@ -6,17 +6,20 @@ description: Command-by-command behavior for the current `kira` CLI.
 ## `run`
 
 ```bash
-kira run [--backend vm|llvm|hybrid] <project-dir|project.toml>
+kira run [--backend vm|llvm|hybrid] [--offline] [--locked] <project-dir|kira.toml|project.toml>
 ```
 
 - default backend: VM
 - `--backend llvm`: builds and runs a native executable
 - `--backend hybrid`: builds a hybrid manifest, bytecode sidecar, and native shared library, then runs the mixed module
+- `--offline`: use only cached dependencies
+- `--locked`: require the existing lockfile state
+- the default VM path can print scalar values plus named struct values
 
 ## `build`
 
 ```bash
-kira build [--backend vm|llvm|hybrid] <project-dir|project.toml>
+kira build [--backend vm|llvm|hybrid] [--offline] [--locked] <project-dir|kira.toml|project.toml>
 ```
 
 Current output conventions:
@@ -28,7 +31,7 @@ Current output conventions:
 ## `check`
 
 ```bash
-kira check <project-dir|project.toml>
+kira check [--offline] [--locked] <project-dir|kira.toml|project.toml>
 ```
 
 `check` does more than syntax-only validation. It currently:
@@ -80,6 +83,55 @@ Reads `llvm-metadata.toml`, chooses the host bundle, downloads the pinned releas
 ```text
 ~/.kira/toolchains/llvm/<llvm-version>/<host-key>/
 ```
+
+## `sync`
+
+```bash
+kira sync [--offline] [--locked] [<project-dir|kira.toml|project.toml>]
+```
+
+Resolves registry, path, and pinned git dependencies, verifies registry archive checksums, fills the local package cache, and refreshes `kira.lock`.
+
+## `add`
+
+```bash
+kira add <Package>
+kira add --git <url> --rev <commit> <Package>
+```
+
+Adds a dependency to `kira.toml`, then resolves and locks the graph.
+
+## `remove`
+
+```bash
+kira remove <Package>
+```
+
+Removes a dependency from the manifest and refreshes the lockfile.
+
+## `update`
+
+```bash
+kira update [<project-dir|kira.toml|project.toml>]
+```
+
+Refreshes exact registry versions in the manifest, then re-syncs the lockfile.
+
+## `package pack`
+
+```bash
+kira package pack [<project-dir|kira.toml|project.toml>]
+```
+
+Writes a validated source-only `.tar` archive into `generated/`.
+
+## `package inspect`
+
+```bash
+kira package inspect <archive-path|project-dir>
+```
+
+Prints package metadata and archive contents in a human-readable form.
 
 ## `new`
 
