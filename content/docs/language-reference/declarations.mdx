@@ -1,6 +1,6 @@
 ---
 title: Declarations
-description: Import, function, type, construct, and construct-form declarations in the current Kira language surface.
+description: Import, annotation, capability, function, class, struct, construct, and construct-form declarations in the current Kira language surface.
 ---
 
 ## Top-Level Declarations
@@ -8,8 +8,11 @@ description: Import, function, type, construct, and construct-form declarations 
 The current frontend recognizes these top-level declaration forms:
 
 - `import`
+- `annotation`
+- `capability`
 - `function`
-- `type`
+- `class`
+- `struct`
 - `construct`
 - construct-defined forms such as `Widget Card(...) { ... }`
 
@@ -25,6 +28,23 @@ import bindings.callbacks as callbacks
 
 Unresolved imports are rejected with `KSEM032`.
 
+## Annotations
+
+Annotation declarations use `annotation`, a name, and a body:
+
+```ts
+annotation State {
+}
+
+annotation Attribute {
+    parameters {
+        index: Int
+    }
+}
+```
+
+Annotation bodies can declare parameter schemas, target restrictions, capability composition, and explicit generated members.
+
 ## Functions
 
 Function declarations use `function`, a parameter list, an optional `-> ReturnType`, and either:
@@ -32,13 +52,22 @@ Function declarations use `function`, a parameter list, an optional `-> ReturnTy
 - a block body
 - a trailing `;` for `@FFI.Extern` declarations
 
-## Types
+## Classes and Structs
 
-Type declarations use `type Name { ... }` and may contain:
+Class declarations use `class Name { ... }` or `class Child extends Parent { ... }` and may contain:
 
 - stored members
 - methods
-- `static let`
+- overrides
+
+Struct declarations use `struct Name { ... }` and stay value-oriented:
+
+```ts
+struct Position {
+    let x: Float = 0.0
+    let y: Float = 0.0
+}
+```
 
 ## Constructs and Construct Forms
 

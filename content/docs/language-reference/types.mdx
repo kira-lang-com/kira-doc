@@ -13,22 +13,33 @@ The semantics layer resolves these builtin names:
 | Fixed-width integers | `I8`, `U8`, `I16`, `U16`, `I32`, `U32`, `I64`, `U64` |
 | Native/FFI helpers | `RawPtr`, `CString`, `CBool` |
 
-## Named Types
+## Function Types
 
-Named types are declared with `type`:
+Kira now checks first-class non-capturing function types:
 
 ```ts
-type Point {
+(Float) -> Void
+() -> Void
+```
+
+These types are valid in parameters, fields, and local declarations. The current implementation treats them as the honest source-level model behind direct trailing callbacks and named function references, while runtime lowering for stored/called function values is still staged.
+
+## Named Types
+
+Named value types are declared with `struct`; behavior-bearing inheritable declarations use `class`:
+
+```ts
+struct Point {
     var x: Float = 0.0
     var y: Float = 0.0
 }
 ```
 
-Types may contain stored members, defaults, methods, and `static let` members.
+Structs may contain stored members, defaults, and methods. Classes may contain stored members, methods, inheritance, and overrides.
 
 ## Generated and Annotated Types
 
-Generated bindings and native interop also declare types through `type`, often with FFI annotations:
+Generated bindings and native interop declare transport and ABI shapes through `struct`, often with FFI annotations:
 
 - callback types
 - pointer wrapper types
@@ -44,3 +55,4 @@ Current semantic rules include:
 - ambiguous inference raises `KSEM029`
 - some explicit typed contexts allow coercion, such as assigning an integer literal to a `Float`
 - illegal coercions raise a type mismatch diagnostic such as `KSEM031`
+

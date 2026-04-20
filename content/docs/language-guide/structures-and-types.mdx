@@ -1,9 +1,9 @@
 ---
 title: Structures and Types
-description: Named types, builtin types, generated FFI types, and the current record-like role of `type` in Kira.
+description: Named structs, classes, builtin types, and generated FFI shapes in Kira.
 ---
 
-Kira currently documents named data shapes through `type`.
+Kira names data shapes with `struct` and inheritable declarations with `class`.
 
 ## Builtin Types
 
@@ -15,33 +15,70 @@ The semantics layer resolves these builtin names today:
 | Fixed-width integers | `I8`, `U8`, `I16`, `U16`, `I32`, `U32`, `I64`, `U64` |
 | Native/FFI helpers | `RawPtr`, `CString`, `CBool` |
 
-## Declaring a Type
+## Declaring a Struct
 
 ```ts
-type RevenueSnapshot {
+struct RevenueSnapshot {
     let monthLabel: String
     let gross: Int
     let net: Int
 }
 ```
 
-Types can contain:
+Structs are value-oriented declarations. They can contain:
 
 - stored members
 - default values
-- `static let` members
 - methods
+- methods declared directly inside the body
+- function-typed fields when an API needs non-capturing callback storage
+
+```ts
+struct Point {
+    let x: Float = 0.0
+    let y: Float = 0.0
+    let zero: Point = Point { x: 0.0, y: 0.0 }
+
+    function distanceTo(other: Point) -> Float {
+        return x + other.x
+    }
+}
+```
+
+Named struct literals are part of the current language surface:
+
+```ts
+let rect = Rect {
+    x: 0.0
+    y: 0.0
+    width: 10.0
+    height: 20.0
+}
+```
+
+Classes are the richer form when you need inheritance:
+
+```ts
+class StoryLane {
+    let width: Float
+    let height: Float
+
+    function area() -> Float {
+        return width * height
+    }
+}
+```
 
 ## FFI-Generated Types
 
-Generated bindings also use `type`, often with compiler-meaning annotations:
+Generated bindings use `struct`, often with compiler-meaning annotations:
 
 ```ts
 @FFI.Callback { abi: c; params: [I64, RawPtr]; result: I64; }
-type kira_i64_callback {}
+struct kira_i64_callback {}
 
 @FFI.Pointer { target: app_state; ownership: borrowed; }
-type app_state_ptr {}
+struct app_state_ptr {}
 ```
 
 That is why the guide treats named types as a shared surface for both app code and generated interop code.
@@ -51,8 +88,6 @@ That is why the guide treats named types as a shared surface for both app code a
 This repository does not currently document separate first-class language chapters for:
 
 - enumerations
-- classes
-- inheritance
 - protocol-oriented type systems
 
-The present Kira story is narrower and more concrete: `type` is the real, repo-proven named-type form today.
+The present Kira story is concrete: `struct` is the value-type surface, and `class` is the inheritable declaration form.

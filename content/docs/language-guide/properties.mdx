@@ -1,14 +1,14 @@
 ---
 title: Properties
-description: Stored members, defaults, `let` versus `var`, `static let`, and assignment to locals or fields.
+description: Stored members, defaults, `let` versus `var`, and assignment to locals or fields.
 ---
 
-Kira examples use property-like members inside `type` declarations and construct forms.
+Kira examples use property-like members inside `class` or `struct` declarations and construct forms.
 
 ## Stored Members
 
 ```ts
-type Point {
+struct Point {
     var x: Float = 0.0
     var y: Float = 0.0
 }
@@ -18,20 +18,20 @@ Current member storage forms shown in the repo:
 
 - `let` for immutable stored members
 - `var` for mutable stored members
-- `static let` for type-level constants
 
 ## Default Values
 
 Defaults appear naturally in the checked-in examples:
 
 ```ts
-type ThemeConfig {
+struct ThemeConfig {
     let title: String = "Operations";
     let highlightLevel: Float = 0.8;
 }
 
-type Point {
-    static let zero: Point = Point(x: 0.0, y: 0.0)
+struct Point {
+    let x: Float = 0.0
+    let y: Float = 0.0
 }
 ```
 
@@ -63,4 +63,5 @@ Widget Card(title: String) {
 }
 ```
 
-That means the property surface is not limited to plain `type` declarations.
+That means the property surface is not limited to plain `struct` declarations.
+

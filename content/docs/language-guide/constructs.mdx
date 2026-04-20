@@ -8,12 +8,20 @@ Constructs let the compiler model library-defined declaration shapes.
 ## Defining a Construct
 
 ```ts
+annotation State {
+}
+
+annotation Binding {
+}
+
+annotation Env {
+}
+
 construct Widget {
     annotations {
         @State;
         @Binding;
         @Env;
-        @Doc;
     }
 
     requires {
@@ -46,6 +54,8 @@ The frontend recognizes these section families today:
 - `representation`
 - custom sections preserved structurally
 
+The `annotations { ... }` section is an allowlist for the construct domain. Each listed annotation must be declared with `annotation Name { ... }` or provided by an imported module. The annotation declaration owns the parameter schema; the construct owns whether that annotation is meaningful for the construct form.
+
 ## Construct Forms
 
 A construct can introduce its own declaration form:
@@ -67,7 +77,7 @@ Widget Dashboard(title: String, theme: ThemeConfig) {
 }
 ```
 
-This is real compiler behavior today, even though it is primarily proven through check-only coverage.
+This is real compiler behavior today, and nested builder calls now retain their child-builder structure in the semantic model instead of being discarded after parsing.
 
 ## Content Requirements
 
@@ -83,3 +93,13 @@ Constructs are one of the clearest examples of Kira's intended boundary:
 
 - the compiler provides mechanisms and validation
 - higher-level library behavior still belongs in Kira source
+- annotations are declared as source symbols, while constructs decide their domain-specific meaning
+
+## Callback Blocks Versus Builder Blocks
+
+Kira deliberately keeps two different mental models:
+
+- ordinary APIs such as `app.onFrame { frame in ... }` use callback blocks and lower as function values
+- construct-driven DSL calls such as `Column() { Text("hello") }` keep builder/tree structure so libraries can inspect children semantically
+
+That distinction is what lets callback-style lifecycle code stay executable while UI-style constructs keep real child trees for layout, theming, and diffing.

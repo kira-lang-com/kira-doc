@@ -21,15 +21,15 @@ The lexer also treats `//` comments and string delimiters as first-class syntax,
 `String` is a builtin type recognized by the current semantics layer:
 
 ```ts
-type RevenueSnapshot {
+struct RevenueSnapshot {
     let monthLabel: String
 }
 ```
 
 It also appears in:
 
-- `@Doc("...")` annotation arguments
-- type fields and method signatures
+- `///` documentation comments
+- struct/class fields and method signatures
 - the current proven `print(...)` contract
 
 ## Characters
@@ -46,3 +46,4 @@ The proven cross-backend string path today is straightforward:
 - `print("...")` is proven in the checked-in runnable examples
 
 Do not assume that every future string API or text-processing abstraction already exists just because `String` is a builtin name.
+

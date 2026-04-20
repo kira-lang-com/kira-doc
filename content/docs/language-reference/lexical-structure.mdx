@@ -7,10 +7,11 @@ description: Comments, identifiers, keywords, punctuation, literals, and qualifi
 
 The lexer ignores spaces, tabs, carriage returns, and newlines.
 
-The documented comment form is:
+The documented comment forms are:
 
 ```ts
 // line comment
+/// documentation comment
 ```
 
 ## Identifiers and Qualified Names
@@ -29,7 +30,7 @@ FFI.Pointer
 
 The current token set reserves these keywords:
 
-`construct`, `type`, `function`, `let`, `var`, `static`, `return`, `import`, `as`, `if`, `else`, `for`, `in`, `switch`, `case`, `default`, `true`, `false`
+`annotation`, `capability`, `class`, `construct`, `struct`, `extends`, `function`, `generated`, `override`, `overridable`, `targets`, `uses`, `let`, `var`, `return`, `import`, `as`, `if`, `else`, `for`, `in`, `switch`, `case`, `default`, `true`, `false`
 
 ## Punctuation and Operators
 

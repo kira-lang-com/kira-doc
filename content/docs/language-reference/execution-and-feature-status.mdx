@@ -12,17 +12,17 @@ description: A compact status matrix for what Kira parses, semantically checks, 
 | `function` declarations | Yes | Yes | Yes | Yes | Yes |
 | integer, float, string, and boolean runtime values | Yes | Yes | VM proven | partial/native-specific | partial/hybrid-specific |
 | local `let` | Yes | Yes | Yes | Yes | Yes |
-| member access | Yes | Yes | partial/proven narrowly | Yes in native examples | Yes in hybrid/native examples |
+| member access | Yes | Yes | Yes | Yes | Yes |
 | integer `+` | Yes | Yes | Yes | Yes | Yes |
 | other arithmetic/comparison/logical operators | Yes | Yes | not broadly proven | partial/frontend-documented | partial/frontend-documented |
-| array literals | Yes | Yes | not part of the core lowered subset | not broadly proven | not broadly proven |
-| `if` / `for` / `switch` | Yes | Yes | not part of the small proven core | partial/frontend-documented | partial/frontend-documented |
+| array literals, indexing, and indexed assignment | Yes | Yes | Yes | Yes | Yes |
+| `if` / `else if` / `for` / `while` / `break` / `continue` / `switch` | Yes | Yes | Yes | Yes | Yes |
 | conditional `?:` | Yes | No (`KSEM033`) | No | No | No |
 | construct forms and builder blocks | Yes | Yes | check-oriented only | check-oriented only | check-oriented only |
 | `@FFI.Extern` declarations | Yes | Yes | No | Yes | Yes |
 | callback-typed FFI calls | Yes | Yes | No | Yes | Yes |
 | builtin `print` | Yes | Yes | Yes for scalars, pointers, and named struct values | narrower proven subset | narrower proven subset |
-| named struct construction | Yes | Yes | Yes on the VM/default path | not yet broadly proven | not yet broadly proven |
+| named struct construction | Yes | Yes | Yes | Yes | Yes |
 
 ## Reading the Matrix
 

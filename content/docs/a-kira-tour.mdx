@@ -48,16 +48,16 @@ This is the same import shape used by the runnable import corpus and by namespac
 
 ## Named Types and Members
 
-Kira uses `type` for record-like declarations:
+Kira uses `struct` for value-oriented data shapes and `class` for behavior:
 
 ```ts
-type RevenueSnapshot {
+struct RevenueSnapshot {
     let monthLabel: String
     let gross: Int
     let net: Int
 }
 
-type StoryLane {
+class StoryLane {
     let width: Float
     let height: Float
 
@@ -67,7 +67,7 @@ type StoryLane {
 }
 ```
 
-Fields, defaults, `static let`, and methods all appear in the checked-in examples.
+Fields and defaults appear in structs; methods appear in classes.
 
 ## Constructs and Builder-Style Forms
 
@@ -77,7 +77,6 @@ The frontend also understands construct-defined declaration forms:
 construct Widget {
     annotations {
         @State;
-        @Doc;
     }
 
     requires {
@@ -126,3 +125,4 @@ function runtime_helper() {
 ```
 
 Use the [Language Guide](/docs/language-guide) for the full walkthrough, then keep the [Language Reference](/docs/language-reference) nearby when you need precise rules.
+

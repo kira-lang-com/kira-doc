@@ -1,9 +1,9 @@
 ---
 title: Collection Types
-description: Array syntax in the current frontend, where arrays appear today, and what is not yet part of the proven executable subset.
+description: Array literals, indexing, indexed assignment, and where arrays show up in current Kira.
 ---
 
-The current frontend understands **array syntax**.
+The current frontend and executable corpus understand **array syntax**.
 
 ## Array Literals
 
@@ -13,6 +13,13 @@ Examples in the repo use array literals like these:
 [1, 2, 3]
 [Widget]
 [I64, RawPtr]
+```
+
+Executable code can also index arrays:
+
+```ts
+let value = values[index]
+values[index] = nextValue
 ```
 
 Those appear in several different roles:
@@ -33,11 +40,12 @@ The book does **not** currently document a broader standard-library collection A
 
 ## Runnable Boundary
 
-Array syntax belongs to the implemented frontend surface, but it is not part of the small executable subset that the guide can treat as broadly runnable today.
+The current corpus proves:
 
-That means:
+- array literals
+- array locals, params, and returns
+- indexing
+- indexed assignment
+- `for item in values`
 
-- `kira check`, `ast`, and related frontend-oriented flows can cover array syntax
-- `kira run` and `kira build` still depend on the narrower lowering boundary
-
-When arrays appear in examples such as construct builders or FFI annotations, treat them as real language surface, but not as a promise of general-purpose executable collection support.
+Kira still does not document a larger collection API beyond that proven surface.

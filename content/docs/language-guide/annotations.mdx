@@ -1,21 +1,84 @@
 ---
 title: Annotations
-description: Annotation syntax, documentation annotations, execution annotations, namespaced annotations, and compiler-meaning annotation families.
+description: Defining annotations, annotation parameter schemas, construct allowlists, execution annotations, and FFI annotation families.
 ---
 
 Annotations are one of Kira's defining language mechanisms.
 
-## Annotation Syntax
+## Defining Annotations
 
-The current frontend understands several annotation styles:
+Kira annotations are first-class declarations. An annotation declaration gives the annotation a source-level identity and, optionally, a parameter schema:
+
+```ts
+annotation State {
+}
+
+annotation Attribute {
+    parameters {
+        index: Int
+    }
+}
+
+annotation InputMapping {
+    parameters {
+        priority: Int = 0
+        blocksLowerPriorityMappings: Bool = false
+    }
+}
+```
+
+This keeps annotations lightweight. The declaration says what parameters an annotation accepts; it does not say where the annotation is globally valid or what semantic behavior it performs.
+
+## Parameter Blocks
+
+The first version supports one declaration subblock:
+
+```ts
+parameters {
+    name: Type
+    otherName: Type = defaultValue
+}
+```
+
+Supported parameter types are `Bool`, `Int`, `Float`, and `String`. A parameter without a default is required. A parameter with a default is filled by semantics when the annotation is applied.
+
+Documentation is not modeled as an annotation. Use `///` comments immediately above the declaration or member they describe:
+
+```ts
+/// Horizontal position in points.
+var x: Float = 0.0
+```
+
+The compiler validates that applied annotations exist, that required parameters are present, that unknown parameter names are rejected, and that argument values match the declared parameter types.
+
+## Applying Annotations
+
+The current frontend understands these annotation use styles:
 
 | Style | Example |
 | --- | --- |
 | Bare | `@Main` |
 | Namespaced | `@FFI.Pointer` |
-| Argument form | `@Doc("Axis-aligned rectangle")` |
-| Block form | `@Doc { "The dashboard content is composed structurally." }` |
-| Object-like argument block | `@FFI.Callback { abi: c; params: [I64, RawPtr]; result: I64; }` |
+| Argument form | `@InputMapping(10)` |
+| Named argument form | `@InputMapping(priority: 10)` |
+| FFI metadata block | `@FFI.Callback { abi: c; params: [I64, RawPtr]; result: I64; }` |
+
+User-defined annotation parameters are supplied with parentheses. The FFI metadata block form is the existing compiler interop path and is separate from first-version annotation parameter declarations.
+
+These fail when the declarations above are in scope:
+
+```ts
+@Attribute
+var position: Float = 0.0
+
+@Attribute("zero")
+var position: Float = 0.0
+
+@State(1)
+var isPressed: Bool = false
+```
+
+`@Attribute` requires `index: Int`, `"zero"` is a `String`, and `@State` declares no parameters.
 
 ## Execution Annotations
 
@@ -27,23 +90,16 @@ Three annotations have direct compiler meaning for execution:
 
 They choose entrypoints and execution placement, and the semantics layer rejects duplicates or conflicting combinations.
 
-## Documentation Annotations
+## Documentation Comments
 
-`@Doc` appears throughout the examples:
+Kira documentation uses consecutive `///` comments:
 
 ```ts
-@Doc("Horizontal position in points.")
+/// Horizontal position in points.
 var x: Float = 0.0
-
-@Doc {
-    "The dashboard content is composed structurally."
-}
-content {
-    ...
-}
 ```
 
-These examples are important because they show that annotations are part of ordinary source structure, not a niche add-on.
+Documentation comments are part of the lexical surface, while annotations remain source-level metadata for behavior and validation.
 
 ## FFI Annotation Families
 
@@ -60,17 +116,45 @@ Those annotations are covered in more detail in [Interop and FFI](/docs/language
 
 ## Construct-Declared Annotation Use
 
-Construct definitions can declare which annotations are valid in construct forms:
+Construct definitions declare which already-declared annotations are valid in construct forms:
 
 ```ts
+annotation State {
+}
+
+annotation Binding {
+}
+
 construct Widget {
     annotations {
         @State;
         @Binding;
         @Env;
-        @Doc;
     }
 }
 ```
 
-That is part of how Kira lets libraries define richer language surfaces while still keeping validation in the compiler.
+That split is intentional:
+
+- `annotation` declares the annotation identity and parameter schema
+- `construct` declares which annotations are meaningful in a construct domain
+- construct semantics remain the source of behavior
+
+Annotations can declare direct target restrictions with readable `targets: ...` entries, and reusable generated behavior is composed through capabilities:
+
+```ts
+capability Labeling {
+    generated {
+        overridable function label() -> String {
+            return "item"
+        }
+    }
+}
+
+annotation GameItem {
+    targets: class
+    uses Labeling
+}
+```
+
+Generated members are explicit through `generated { ... }`, and class-side replacements use normal `override function ...` syntax when the generated member is marked `overridable`.

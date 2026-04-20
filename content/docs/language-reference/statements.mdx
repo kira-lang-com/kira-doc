@@ -1,6 +1,6 @@
 ---
 title: Statements
-description: Let, assignment, return, expression, block, if, for, and switch statements in the current Kira grammar.
+description: Let, assignment, return, expression, block, if, for, while, break, continue, and switch statements in the current Kira grammar.
 ---
 
 ## Statement Forms
@@ -14,6 +14,9 @@ The current parser models these statement families:
 - block statements
 - `if`
 - `for`
+- `while`
+- `break`
+- `continue`
 - `switch`
 
 ## Local Declarations
@@ -35,9 +38,10 @@ Current semantic validation only allows assignment targets that resolve to:
 
 - locals
 - fields
+- array index expressions
 
 ## Control Flow Statements
 
-`if`, `for`, and `switch` are accepted both in statement position and, separately, in builder/content blocks.
+`if`, `else if`, `for`, `while`, `break`, `continue`, and `switch` are accepted in statement position. Builder/content blocks currently use `if`, `else if`, `for`, and `switch`.
 
 The current executable boundary is narrower than the full frontend surface, so treat those forms according to the status notes in the guide and the execution matrix in this reference.

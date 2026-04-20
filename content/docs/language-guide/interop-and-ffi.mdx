@@ -33,7 +33,7 @@ Callback signatures are first-class enough to validate:
 
 ```ts
 @FFI.Callback { abi: c; params: [I64, RawPtr]; result: I64; }
-type kira_i64_callback {}
+struct kira_i64_callback {}
 ```
 
 The fail corpus also proves `KSEM045` ("invalid callback signature") when a Kira callback does not match the expected FFI callback type.
@@ -44,21 +44,22 @@ The current generated/native examples also prove:
 
 - borrowed pointer wrappers
 - C-layout structs
-- alias types with static constants
+- alias carrier structs for enum-like native values
 - array metadata in generated bindings
 
 Examples:
 
 ```ts
 @FFI.Struct { layout: c; }
-type app_state {
+struct app_state {
     let viewport_width: I32
 }
 
 @FFI.Pointer { target: app_state; ownership: borrowed; }
-type app_state_ptr {}
+struct app_state_ptr {}
 ```
 
 ## Where to Go Next
 
 This chapter explains the language-visible surface. For the workflow side of manifests, autobinding generation, and examples, continue in [FFI Workflows](/docs/appendix/ffi-workflows).
+

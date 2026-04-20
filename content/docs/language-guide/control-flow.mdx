@@ -1,12 +1,16 @@
 ---
 title: Control Flow
-description: If, for, and switch in statement and builder positions, plus the distinction between frontend support and today's runnable subset.
+description: If, else if, for, while, break, continue, and switch in current Kira.
 ---
 
-Kira's frontend understands three main control-flow forms:
+Kira's frontend and executable corpus understand these main control-flow forms:
 
 - `if`
+- `else if`
 - `for`
+- `while`
+- `break`
+- `continue`
 - `switch`
 
 ## Statement Forms
@@ -18,8 +22,27 @@ if iw <= 0.0 || ih <= 0.0 {
     return Rect.zero
 }
 
+if score == 0 {
+    print("zero")
+} else if score == 1 {
+    print("one")
+} else {
+    print("many")
+}
+
 for item in [1, 2, 3] {
     print(item)
+}
+
+while index < 10 {
+    if index == 2 {
+        index = index + 1
+        continue
+    }
+    if index == 4 {
+        break
+    }
+    index = index + 1
 }
 
 switch 0 {
@@ -59,21 +82,16 @@ content {
 }
 ```
 
-That construct coverage is one of the clearest examples of Kira's broader frontend surface.
+That construct coverage is one of the clearest examples of Kira's broader frontend surface. Builder/content blocks currently use `if`, `else if`, `for`, and `switch`. `while`, `break`, and `continue` are statement features.
 
 ## What to Use in Executable Code
 
-Today, you should read control flow with care:
-
-- the parser models these forms
-- the semantics layer lowers and validates them in the frontend
-- the current executable boundary is intentionally smaller
-
-For code that must definitely run through current backends, stay close to the proven corpus. For richer frontend coverage, `if`, `for`, and `switch` are already real parts of the language.
+Today, `if`, `else if`, `for`, `while`, `break`, `continue`, and `switch` are all part of the proven corpus across the runnable backends.
 
 ## A Practical Rule
 
-If you need an executable branch today:
+If you need executable control flow today:
 
-- prefer statement-level `if`
-- avoid ternary expressions, because those are parsed but rejected during lowering
+- prefer statement-level branching and loops
+- use `else if` instead of nested manual blocks when that reads better
+- treat conditional `?:` expressions as a separate feature boundary

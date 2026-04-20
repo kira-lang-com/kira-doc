@@ -1,6 +1,6 @@
 ---
 title: Expressions
-description: Literal, unary, binary, conditional, call, member, array, and namespaced expression forms in current Kira.
+description: Literal, unary, binary, conditional, call, member, array, struct-literal, indexing, and namespaced expression forms in current Kira.
 ---
 
 ## Primary Expression Forms
@@ -11,7 +11,9 @@ The current frontend understands these expression families:
 - identifiers and qualified names
 - grouped expressions
 - array literals
+- named and nested struct literals
 - member access
+- indexing
 - call expressions
 
 ## Unary and Binary Expressions
@@ -45,12 +47,54 @@ Current status:
 
 ## Calls and Member Access
 
-Call expressions support argument lists and labeled arguments:
+Call expressions support argument lists, labeled arguments, and direct trailing callbacks:
 
 ```ts
 helper()
 Rect(x: 0.0, y: 0.0)
 callbacks.kira_invoke_callback(add_two, 0, 5)
+app.onFrame { frame in renderFrame(frame) }
 ```
 
 Member access uses `.` and is part of ordinary source and generated/native interop examples.
+
+Struct literals provide the readable field-initialization surface for descriptor-style code:
+
+```ts
+let rect = Rect {
+    x: 0.0
+    y: 0.0
+    width: 10.0
+    height: 20.0
+}
+
+let pass = RenderPassDescriptor {
+    label: "swapchain-pass"
+    clearColor: Float4 { r: 0.04, g: 0.05, b: 0.08, a: 1.0 }
+}
+```
+
+Member access uses dot syntax:
+
+```ts
+let width = rect.width
+```
+
+Indexing uses `[]`:
+
+```ts
+let value = values[index]
+values[index] = nextValue
+```
+
+Function values use the current readable surface:
+
+```ts
+let handler: (Float) -> Void = update
+handler(0.016)
+```
+
+Current callback/block distinction:
+
+- ordinary calls with a final function-typed parameter bind trailing blocks as callbacks
+- construct-driven builder/content blocks preserve child-tree structure instead of lowering to opaque callbacks
