@@ -22,7 +22,7 @@ Kira now checks first-class non-capturing function types:
 () -> Void
 ```
 
-These types are valid in parameters, fields, and local declarations. The current implementation treats them as the honest source-level model behind direct trailing callbacks and named function references, while runtime lowering for stored/called function values is still staged.
+These types are valid in parameters, fields, and local declarations. The current implementation lowers named function references, non-capturing inline callback literals, and callable-value invocations through locals and fields across the shared executable backends.
 
 ## Named Types
 

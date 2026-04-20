@@ -35,13 +35,13 @@ let hidden = isCompact || isCollapsed;
 
 ## Conditional Expressions
 
-The parser understands the ternary form:
+The current lowered subset supports the ternary form:
 
 ```ts
 condition ? thenValue : elseValue
 ```
 
-But the semantics pass explicitly rejects it today with `KSEM033` ("conditional expression is not lowered yet"). Use `if` statements in executable code for now.
+`condition ? thenValue : elseValue` is now parsed, semantically checked, and lowered in the current scalar/pointer executable subset.
 
 ## Member Access, Calls, and Assignment
 
@@ -62,8 +62,12 @@ Assignments are statements, not general expressions. Current semantic validation
 
 The parser and semantics layers understand more than the currently proven lowering boundary.
 
-The strongest cross-backend proof today is still integer `+`. Other operators are part of the current language surface, but you should read them with the same status discipline used throughout the guide:
+The current lowered executable subset is broader than the earliest bootstrap core. It includes:
 
-- parsed
-- checked
-- runnable only where the current backend subset proves them
+- integer `+`, `-`, `*`, `/`, `%`
+- float `+`, `-`, `*`, `/`, `%`
+- unary `-` on integers and floats
+- unary `!` on booleans
+- integer, float, and boolean comparisons
+- short-circuit `&&` and `||` on booleans
+- conditional `?:` in the lowered scalar/pointer subset

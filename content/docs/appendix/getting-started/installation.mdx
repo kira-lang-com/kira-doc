@@ -45,8 +45,7 @@ The managed layout is:
   dev/
     0.1.0/
       bin/
-        kirac
-      foundation/
+        kirac[.exe]
       templates/
       llvm-metadata.toml
   llvm/
@@ -77,6 +76,8 @@ zig build install -p .local
 ```
 
 That installs the launcher into `.local/bin/`.
+
+On Windows, you can also run `./zig-out/bin/kira.exe` directly or add `zig-out/bin` to `PATH` for the current shell session.
 
 ## Install The Pinned LLVM Bundle
 
@@ -113,7 +114,7 @@ These are the most useful local development targets:
 ```bash
 zig build kirac
 zig build kira-bootstrapper
-zig build run -- --help
+zig build run -- run examples/hello
 zig build test
 ```
 

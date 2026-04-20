@@ -19,14 +19,16 @@ include_dirs = ["../../../third_party/sokol"]
 defines = ["SOKOL_NO_ENTRY", "SOKOL_GLCORE"]
 
 [autobinding]
-module = "bindings.sokol"
-output = "../bindings/sokol.kira"
-spec = "sokol.bind.toml"
+module = "sokol"
+output = "../sokol.kira"
 headers = [
   "../../../third_party/sokol/sokol_app.h",
   "../../../third_party/sokol/sokol_gfx.h",
   "../../../third_party/sokol/sokol_glue.h"
 ]
+
+[bindings]
+mode = "all_public"
 
 [build]
 sources = ["../../../third_party/sokol/sokol_impl.m"]
@@ -71,8 +73,15 @@ Defines how Kira emits the binding module:
 
 - `module`: import path used by Kira source
 - `output`: generated `.kira` file path
-- `spec`: the `.bind.toml` spec file
 - `headers`: the public headers to inspect
+
+### `[bindings]`
+
+Defines how public declarations are filtered into the generated module.
+
+The Sokol proof target currently uses:
+
+- `mode = "all_public"`
 
 ### `[build]`
 
@@ -93,7 +102,7 @@ That is where platform-specific archive paths, frameworks, and system libraries 
 - one TOML file describes one native library
 - the TOML owns header paths, autobinding inputs, and binary locations
 - Kira source should import the generated module, not hardcode binary paths
-- `.bind.toml` files are autobinding specs, not native library manifests by themselves
+- `.bind.toml` sidecar files are no longer part of the documented workflow in this repository
 
 ## Dynamic Linking Note
 

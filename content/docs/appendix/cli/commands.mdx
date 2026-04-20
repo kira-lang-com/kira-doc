@@ -6,7 +6,7 @@ description: Command-by-command behavior for the current `kira` CLI.
 ## `run`
 
 ```bash
-kira run [--backend vm|llvm|hybrid] [--offline] [--locked] <project-dir|kira.toml|project.toml>
+kira run [--backend vm|llvm|hybrid] [--offline] [--locked] [<project-dir|kira.toml|project.toml>]
 ```
 
 - default backend: VM
@@ -14,12 +14,13 @@ kira run [--backend vm|llvm|hybrid] [--offline] [--locked] <project-dir|kira.tom
 - `--backend hybrid`: builds a hybrid manifest, bytecode sidecar, and native shared library, then runs the mixed module
 - `--offline`: use only cached dependencies
 - `--locked`: require the existing lockfile state
+- when no path is given, Kira uses the current directory and prefers `kira.toml`, then legacy `project.toml`
 - the default VM path can print scalar values plus named struct values
 
 ## `build`
 
 ```bash
-kira build [--backend vm|llvm|hybrid] [--offline] [--locked] <project-dir|kira.toml|project.toml>
+kira build [--backend vm|llvm|hybrid] [--offline] [--locked] [<project-dir|kira.toml|project.toml>]
 ```
 
 Current output conventions:
@@ -31,7 +32,7 @@ Current output conventions:
 ## `check`
 
 ```bash
-kira check [--offline] [--locked] <project-dir|kira.toml|project.toml>
+kira check [--offline] [--locked] [<project-dir|kira.toml|project.toml>]
 ```
 
 `check` does more than syntax-only validation. It currently:
@@ -51,7 +52,7 @@ check passed
 ## `tokens`
 
 ```bash
-kira tokens <project-dir|project.toml>
+kira tokens [<project-dir|kira.toml|project.toml>]
 ```
 
 Prints lexer tokens with:
@@ -60,17 +61,47 @@ Prints lexer tokens with:
 - lexeme
 - byte range
 
+When no path is given, Kira uses the current directory and prefers `kira.toml`, then legacy `project.toml`.
+
 This is useful when you are adjusting syntax or trying to understand a parser failure.
 
 ## `ast`
 
 ```bash
-kira ast <project-dir|project.toml>
+kira ast [<project-dir|kira.toml|project.toml>]
 ```
 
 Prints the parsed AST from `kira_syntax_model`.
 
 Use it when you want to confirm that the parser understood a construct, annotation, or content block the way you expect.
+
+When no path is given, Kira uses the current directory and prefers `kira.toml`, then legacy `project.toml`.
+
+## `shader check`
+
+```bash
+kira shader check [<file.ksl>]
+```
+
+Runs the dedicated `.ksl` shader lexer, parser, import loader, semantic pass, and typed shader IR validation.
+
+## `shader ast`
+
+```bash
+kira shader ast [<file.ksl>]
+```
+
+Dumps the parsed KSL module shape without routing through the executable `.kira` frontend.
+
+## `shader build`
+
+```bash
+kira shader build [<file.ksl>] [--out-dir <dir>]
+```
+
+- with an explicit `.ksl` file, emits GLSL 330 vertex/fragment source plus reflection JSON into `generated/shaders/` by default
+- with no explicit file, discovers top-level PascalCase `*.ksl` entry shaders under `Shaders/` in the current project root and writes outputs to `generated/Shaders/`
+- compute shaders are part of the source language and semantic model, but the current GLSL 330 backend rejects them intentionally with a clear diagnostic
 
 ## `fetch-llvm`
 

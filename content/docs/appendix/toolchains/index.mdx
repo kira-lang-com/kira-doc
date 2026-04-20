@@ -21,7 +21,7 @@ The install flow writes:
 ~/.kira/toolchains/current.toml
 ~/.kira/toolchains/<channel>/<version>/
   bin/
-    kirac
+    kirac[.exe]
   templates/
   llvm-metadata.toml
 ```
@@ -42,6 +42,7 @@ The repo keeps the most common build targets explicit:
 zig build kirac
 zig build kira-bootstrapper
 zig build install-kirac
+zig build install
 ```
 
 Those let you validate the managed toolchain flow without guessing how it is packaged.
@@ -65,7 +66,7 @@ That resource root is what gives the CLI access to:
 
 Current template output:
 
-- `project.toml`
+- `kira.toml`
 - `app/main.kira`
 
 The template is intentionally small. It reflects the current executable subset instead of pretending the repo already ships a full batteries-included application framework.

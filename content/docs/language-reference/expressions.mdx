@@ -42,8 +42,8 @@ condition ? thenValue : elseValue
 Current status:
 
 - parsed by the frontend
-- rejected by semantic lowering with `KSEM033`
-- not part of the current executable subset
+- semantically checked
+- part of the current lowered scalar/pointer subset
 
 ## Calls and Member Access
 
@@ -93,6 +93,12 @@ Function values use the current readable surface:
 let handler: (Float) -> Void = update
 handler(0.016)
 ```
+
+Current status for function values:
+
+- function types are valid in parameters, locals, and fields
+- named function references and non-capturing inline callback literals are lowered across the shared executable backends
+- callable-value invocations through locals and fields are part of the current lowered subset
 
 Current callback/block distinction:
 

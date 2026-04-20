@@ -49,10 +49,10 @@ Each corpus case should keep `main.kira` and `expect.toml` in sync.
 If you add a native library:
 
 1. create a dedicated TOML manifest under `native_libs/`
-2. add the `.bind.toml` autobinding spec beside it
-3. keep generated bindings in a nearby `bindings/` folder
+2. keep autobinding configuration in that manifest's `[bindings]` section
+3. keep generated bindings in a nearby `.kira` file tracked by the manifest
 4. add or update examples/tests that prove the path
-5. document the workflow in `apps/docs/content/docs/appendix/ffi-workflows/` if it changes user-visible behavior
+5. document the workflow in `content/docs/appendix/ffi-workflows/` if it changes user-visible behavior
 
 ## Docs And Examples
 

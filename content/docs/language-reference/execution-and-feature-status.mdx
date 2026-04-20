@@ -10,19 +10,19 @@ description: A compact status matrix for what Kira parses, semantically checks, 
 | `@Main` entrypoint | Yes | Yes | Yes | Yes | Yes |
 | `@Runtime` / `@Native` | Yes | Yes | `@Runtime` only | Yes | Yes |
 | `function` declarations | Yes | Yes | Yes | Yes | Yes |
-| integer, float, string, and boolean runtime values | Yes | Yes | VM proven | partial/native-specific | partial/hybrid-specific |
+| integer, float, string, and boolean runtime values | Yes | Yes | Yes | Yes | Yes |
 | local `let` | Yes | Yes | Yes | Yes | Yes |
 | member access | Yes | Yes | Yes | Yes | Yes |
-| integer `+` | Yes | Yes | Yes | Yes | Yes |
-| other arithmetic/comparison/logical operators | Yes | Yes | not broadly proven | partial/frontend-documented | partial/frontend-documented |
+| integer, float, and boolean operators in the lowered subset | Yes | Yes | Yes | Yes | Yes |
 | array literals, indexing, and indexed assignment | Yes | Yes | Yes | Yes | Yes |
 | `if` / `else if` / `for` / `while` / `break` / `continue` / `switch` | Yes | Yes | Yes | Yes | Yes |
-| conditional `?:` | Yes | No (`KSEM033`) | No | No | No |
+| conditional `?:` in the lowered scalar/pointer subset | Yes | Yes | Yes | Yes | Yes |
 | construct forms and builder blocks | Yes | Yes | check-oriented only | check-oriented only | check-oriented only |
 | `@FFI.Extern` declarations | Yes | Yes | No | Yes | Yes |
 | callback-typed FFI calls | Yes | Yes | No | Yes | Yes |
 | builtin `print` | Yes | Yes | Yes for scalars, pointers, and named struct values | narrower proven subset | narrower proven subset |
 | named struct construction | Yes | Yes | Yes | Yes | Yes |
+| callable values through locals and fields | Yes | Yes | Yes | Yes | Yes |
 
 ## Reading the Matrix
 

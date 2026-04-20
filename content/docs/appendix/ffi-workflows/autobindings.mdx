@@ -1,6 +1,6 @@
 ---
 title: Generated Autobindings
-description: How Kira reads headers, applies `.bind.toml` specs, and emits normal `.kira` modules.
+description: How Kira reads headers, applies manifest binding filters, and emits normal `.kira` modules.
 ---
 
 Kira's autobinder is not generating an opaque sidecar format. It emits real Kira source files.
@@ -19,9 +19,9 @@ kira check examples/sokol_triangle
 
 can validate the native library description and ensure the generated binding module exists before a full native run.
 
-## Spec File Shapes
+## Binding Filter Shapes
 
-Autobinding specs live in `.bind.toml` files.
+Binding filters now live directly in the native library manifest.
 
 ### Listed mode
 
@@ -42,7 +42,7 @@ Use it when the proof target wants the whole public header surface:
 mode = "all_public"
 ```
 
-The Sokol triangle proof uses `all_public`.
+The Sokol triangle proof uses `all_public` in its `[bindings]` section.
 
 ## Generated Declaration Kinds
 
@@ -82,6 +82,6 @@ The strongest autobinding proof in the repo is Sokol:
 
 - upstream headers under `third_party/sokol/`
 - a manifest under `examples/sokol_triangle/native_libs/`
-- a generated module at `examples/sokol_triangle/bindings/sokol.kira`
+- a generated module at `examples/sokol_triangle/sokol.kira`
 - Kira-written app logic that uses the generated declarations directly
 
