@@ -53,6 +53,9 @@ Current semantic rules include:
 
 - locals may infer types when the result is unambiguous
 - ambiguous inference raises `KSEM029`
-- some explicit typed contexts allow coercion, such as assigning an integer literal to a `Float`
+- explicit typed declarations require the initializer expression to already match the declared type
+- `var value: Float = 0.0` is valid
+- `var value: Float = 0` is rejected
+- typed declarations without initializer expressions are valid, but remain uninitialized until a later assignment
 - illegal coercions raise a type mismatch diagnostic such as `KSEM031`
 

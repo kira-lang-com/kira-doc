@@ -47,10 +47,22 @@ Examples from the runnable native examples:
 ```ts
 state.viewport_width = 128
 state.viewport_height = 128
-desc.width = 640
+point.x = 4.0
 ```
 
 The semantics layer rejects non-assignable targets with `KSEM046`.
+
+For `@FFI.Struct { layout: c; }` descriptors, builder construction is the preferred ergonomic path:
+
+```ts
+let desc = sapp_desc {
+    width: 640
+    height: 480
+    window_title: "Triangle"
+}
+```
+
+That construction form zero-fills omitted C-layout fields. A plain typed declaration such as `var desc: sapp_desc` stays uninitialized until some later assignment gives it a value.
 
 ## Properties in Construct Forms
 

@@ -74,6 +74,19 @@ let pass = RenderPassDescriptor {
 }
 ```
 
+For `@FFI.Struct { layout: c; }`, both `Type()` and `Type { ... }` begin from a zeroed C-layout value, then write the explicit fields you provide:
+
+```ts
+let desc = sapp_desc()
+
+let shaderSampler = sg_shader_sampler {
+    stage: stageValue
+    sampler_type: samplerTypeValue
+}
+```
+
+Omitted fields remain zero in those C-layout FFI construction forms. That rule belongs to construction only. A declaration such as `var desc: sapp_desc` is still just an uninitialized local declaration.
+
 Member access uses dot syntax:
 
 ```ts

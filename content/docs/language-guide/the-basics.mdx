@@ -73,12 +73,19 @@ Those are the forms you see throughout the guide.
 
 ## Local Bindings
 
-Local declarations use `let` and the parser also recognizes `var`.
+Local declarations use `let` and `var`.
 
 ```ts
 let total = left + right;
-let result: I64 = callbacks.kira_invoke_callback(add_two, 0, 5)
+var monthLabel: String
+var aspectRatio: Float = 1.0
 ```
+
+The declaration model is explicit:
+
+- `var name = expression`: infer the declared type from the initializer expression
+- `var name: SomeType`: declare an uninitialized local of that type
+- `var name: SomeType = expression`: require the initializer expression to already match the declared type
 
 Kira prefers inference when the type is obvious, but it does not guess when the program is ambiguous:
 
@@ -91,6 +98,17 @@ function entry() {
 ```
 
 That fail case produces `KSEM029` ("type inference is ambiguous").
+
+Typed declarations without initializer expressions are valid, but they stay uninitialized until some later assignment gives them a value. Reading them earlier is rejected.
+
+Annotated initializers are strict:
+
+```ts
+var ok: Float = 0.0
+var wrong: Float = 0
+```
+
+The second form is rejected because the declared type is `Float` and the initializer expression is an integer literal.
 
 ## Statement Style
 

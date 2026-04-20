@@ -52,6 +52,33 @@ Function declarations use `function`, a parameter list, an optional `-> ReturnTy
 - a block body
 - a trailing `;` for `@FFI.Extern` declarations
 
+## Local Declarations
+
+Local declarations use `let` or `var` and follow three explicit forms:
+
+```ts
+var title = "Quarterly Review"
+var pendingTitle: String
+var ratio: Float = 0.0
+```
+
+These forms mean:
+
+- `var name = expression`: infer the declared type from the initializer expression
+- `var name: SomeType`: declare an uninitialized local with that declared type
+- `var name: SomeType = expression`: require the initializer expression to already match the declared type
+
+Kira does not invent a default value for `var name: SomeType`. The declaration is real, but the local is not usable until it has been initialized.
+
+Annotated initializers are strict:
+
+```ts
+var ratio: Float = 0.0    // valid
+var ratio: Float = 0      // rejected
+```
+
+The second form is rejected because the declared type is `Float` and the initializer expression is an integer literal. Kira does not implicitly convert that declaration for you.
+
 ## Classes and Structs
 
 Class declarations use `class Name { ... }` or `class Child extends Parent { ... }` and may contain:

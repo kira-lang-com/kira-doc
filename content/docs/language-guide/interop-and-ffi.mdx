@@ -52,12 +52,32 @@ Examples:
 ```ts
 @FFI.Struct { layout: c; }
 struct app_state {
-    let viewport_width: I32
+    var viewport_width: I32
 }
 
 @FFI.Pointer { target: app_state; ownership: borrowed; }
 struct app_state_ptr {}
 ```
+
+## C-Layout Struct Construction
+
+For `@FFI.Struct { layout: c; }`, explicit construction is zero-filled before Kira applies the fields you provide:
+
+```ts
+let desc = sapp_desc {
+    init_userdata_cb: init
+    frame_userdata_cb: frame
+    cleanup_userdata_cb: cleanup
+    user_data: state
+    width: 640
+    height: 480
+    window_title: "Kira Sokol Triangle"
+}
+```
+
+`sapp_desc()` follows the same rule and produces a fully zeroed C-layout value.
+
+This does not change declaration semantics. `var desc: sapp_desc` is still an uninitialized local declaration, not a zero-filled value.
 
 ## Where to Go Next
 

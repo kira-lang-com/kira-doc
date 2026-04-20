@@ -69,6 +69,24 @@ class StoryLane {
 
 Fields and defaults appear in structs; methods appear in classes.
 
+## Typed Declarations
+
+Kira local declarations now use an explicit three-form model:
+
+```ts
+var title = "Launch"
+var pendingTitle: String
+var opacity: Float = 0.8
+```
+
+That means:
+
+- inferred declaration from an initializer expression
+- explicit typed declaration with no initializer expression yet
+- explicit typed declaration with a strict initializer match
+
+For example, `var opacity: Float = 0.0` is valid, while `var opacity: Float = 0` is rejected.
+
 ## Constructs and Builder-Style Forms
 
 The frontend also understands construct-defined declaration forms:
@@ -103,6 +121,8 @@ Widget Card(title: String) {
 ```
 
 This is check-only language coverage today, but it is real compiler behavior: the parser models it and semantics validates content requirements and lifecycle hooks.
+
+The same builder-style surface now works especially well for C-layout FFI descriptors because `@FFI.Struct { layout: c; }` construction starts from zeroed storage before applying the listed fields.
 
 ## Execution Annotations
 
