@@ -1,6 +1,6 @@
 ---
 title: Callback Examples
-description: Native and hybrid callback proofs using generated bindings and explicit `RawPtr` user data.
+description: Native and hybrid callback proofs using generated bindings and Kira-owned persistent callback state.
 ---
 
 The callback examples prove that Kira can:
@@ -9,6 +9,7 @@ The callback examples prove that Kira can:
 - pass a Kira `@Native` function as a real C ABI callback
 - call through that callback in native code
 - do the same across the hybrid runtime/native boundary
+- keep mutable Kira-owned callback state behind an opaque userdata token
 
 ## Native Example
 
@@ -22,14 +23,19 @@ Current output:
 
 ```text
 callbacks
-7
+6
+9
+2
+12
 ```
 
 That comes from:
 
-- a manifest under `examples/callbacks/native_libs/callbacks.toml`
-- a generated module at `examples/callbacks/bindings/callbacks.kira`
-- a native callback function written in Kira
+- a manifest under `examples/callbacks/NativeLibs/callbacks.toml`
+- a generated module at `examples/callbacks/callbacks.kira`
+- a Kira `CounterState` boxed with `nativeState(...)`
+- an opaque token exported with `nativeUserData(...)`
+- a native callback that mutates the boxed state with `nativeRecover<CounterState>(...)`
 
 ## Hybrid Example
 
@@ -51,5 +57,8 @@ The callback examples are small, but they prove a lot of the current contract:
 
 - generated callback typedefs are real Kira types
 - `RawPtr` is the explicit user-data carrier
+- `nativeState(...)` avoids forcing globals for callback state
+- `nativeRecover<T>(...)` is typed recovery, not a raw layout cast
+- `@FFI.Struct { layout: c; }` remains separate from opaque callback state
 - callback targets must match the generated signature exactly
 - Kira does not invent closure capture semantics at the ABI boundary

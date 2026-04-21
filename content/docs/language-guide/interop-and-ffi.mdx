@@ -81,5 +81,51 @@ This does not change declaration semantics. `var desc: sapp_desc` is still an un
 
 ## Where to Go Next
 
+## Opaque Callback State
+
+Kira now supports a first-class callback-state flow for native APIs that carry `void*` or userdata tokens:
+
+```ts
+struct CounterState {
+    var count: Int
+    var total: Int
+}
+
+var state = nativeState(CounterState {
+    count: 0
+    total: 0
+})
+
+var token = nativeUserData(state)
+
+@Native
+function onValue(value: I64, user_data: RawPtr) -> I64 {
+    var state = nativeRecover<CounterState>(user_data)
+    state.count = state.count + 1
+    state.total = state.total + value
+    return value + state.count
+}
+```
+
+Use each piece for a specific job:
+
+- `nativeState(value)` boxes a Kira-owned value into stable callback-state storage
+- `nativeUserData(state)` exports the opaque `RawPtr` token that native code can carry around
+- `nativeRecover<T>(raw_ptr)` turns the token back into typed mutable Kira access
+
+This is intentionally different from `@FFI.Struct { layout: c; }`:
+
+- `@FFI.Struct { layout: c; }` is a real native memory-layout contract
+- `nativeState`/`nativeUserData`/`nativeRecover<T>` is opaque userdata transport
+- native code is not supposed to know the Kira object layout behind that token
+- the feature exists so callback-driven interop does not have to fall back to globals
+
+Current lifetime model:
+
+- callback state is Kira-managed heap storage
+- it currently lives for the lifetime of the process
+- repeated `nativeUserData(state)` calls on the same handle return the same token
+- recovery gives access to the original stored state, not a copy
+
 This chapter explains the language-visible surface. For the workflow side of manifests, autobinding generation, and examples, continue in [FFI Workflows](/docs/appendix/ffi-workflows).
 
