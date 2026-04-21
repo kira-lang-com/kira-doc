@@ -12,31 +12,61 @@ Callbacks are a supported part of the current FFI design.
 - callback targets must currently resolve to `@Native` functions or extern callback symbols
 - user data/context is passed explicitly as `RawPtr`
 - captured closures do not cross the ABI boundary
+- Kira-owned persistent callback state uses `nativeState`, `nativeUserData`, and `nativeRecover<T>`
 
 ## Minimal Example
 
 From `examples/callbacks/app/main.kira`:
 
 ```ts
-import bindings.callbacks as callbacks
+import callbacks as cb
+
+struct CounterState {
+    var count: Int
+    var total: Int
+}
 
 @Main
-@Native
 function main() {
     print("callbacks")
-    let result: I64 = callbacks.kira_invoke_callback(add_two, 0, 5)
-    print(result)
+
+    var state = nativeState(CounterState {
+        count: 0
+        total: 0
+    })
+    var token = nativeUserData(state)
+
+    print(run_native(token, 5))
+    print(run_native(token, 7))
+
+    var recovered = nativeRecover<CounterState>(token)
+    print(recovered.count)
+    print(recovered.total)
     return
 }
 
 @Native
-function add_two(value: I64, user_data: RawPtr): I64 {
-    let sum: I64 = value + 2
-    return sum
+function run_native(user_data: RawPtr, value: I64) -> I64 {
+    return cb.kira_invoke_callback(add_and_track, user_data, value)
+}
+
+@Native
+function add_and_track(value: I64, user_data: RawPtr) -> I64 {
+    var state = nativeRecover<CounterState>(user_data)
+    state.count = state.count + 1
+    state.total = state.total + value
+    return value + state.count
 }
 ```
 
-That is backed by a small C header and implementation:
+That flow matters because it proves a real opaque-userdata contract:
+
+- Kira owns the callback state storage
+- native code only carries a `RawPtr` token
+- the callback recovers the original typed state instead of reaching for globals
+- repeated callback invocations mutate the same persistent stored state
+
+It is backed by a small C header and implementation:
 
 - a callback typedef
 - a function that accepts the callback and invokes it
@@ -70,5 +100,6 @@ That is why the repo carries both:
 
 - `tests/pass/run/ffi_callback_native`
 - `tests/pass/run/ffi_callback_hybrid`
+- `tests/pass/run/ffi_callback_state_parity`
 
 For hybrid mode, the callback still crosses a native boundary. The runtime/native bridge handles marshalling around that call path.

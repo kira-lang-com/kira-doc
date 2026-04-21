@@ -12,6 +12,9 @@ The current frontend understands these expression families:
 - grouped expressions
 - array literals
 - named and nested struct literals
+- `nativeState(value)`
+- `nativeUserData(state)`
+- `nativeRecover<Type>(raw_ptr)`
 - member access
 - indexing
 - call expressions
@@ -86,6 +89,16 @@ let shaderSampler = sg_shader_sampler {
 ```
 
 Omitted fields remain zero in those C-layout FFI construction forms. That rule belongs to construction only. A declaration such as `var desc: sapp_desc` is still just an uninitialized local declaration.
+
+Native callback-state expressions are separate:
+
+```ts
+var state = nativeState(CounterState { count: 0 })
+var token = nativeUserData(state)
+var recovered = nativeRecover<CounterState>(token)
+```
+
+Those forms are for opaque callback userdata transport. They do not promise that ordinary Kira structs use C layout.
 
 Member access uses dot syntax:
 
