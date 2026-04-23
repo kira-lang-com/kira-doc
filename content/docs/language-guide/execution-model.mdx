@@ -27,6 +27,8 @@ source -> lexer -> parser -> semantics -> IR -> bytecode -> VM
 
 VM is the simplest backend, but it cannot execute `@Native` functions. The fail corpus proves `KBUILD001` when a native entrypoint is forced through VM execution.
 
+The VM also does not execute FFI directly. A declaration that directly calls or references an FFI-bound extern must be marked `@Native`, so the compiler can route that edge through native code rather than pretending bytecode can invoke a C ABI symbol.
+
 ## LLVM / Native
 
 The native path lowers shared IR through the LLVM C API and links a host executable:
@@ -44,6 +46,8 @@ Hybrid mode makes the mixed model explicit:
 - `@Runtime` functions stay in bytecode
 - `@Native` functions compile into native code
 - both sides run in one process through the hybrid runtime and native bridge
+
+Hybrid is VM execution plus native trampolines and bridges. It is not a blanket permission for runtime bytecode to call FFI symbols directly.
 
 Example:
 
@@ -66,3 +70,4 @@ Read execution annotations this way today:
 - VM wants runtime execution only
 - LLVM/native needs a native-capable entrypoint
 - hybrid is the natural home for mixed runtime/native programs, especially FFI-heavy ones
+- direct FFI usage requires `@Native`, but callers of `@Native` Kira helpers do not become native automatically

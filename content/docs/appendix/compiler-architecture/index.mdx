@@ -57,6 +57,8 @@ The repo's current package graph is:
 - `kira_hybrid_runtime` loads the `KHM1` hybrid manifest and coordinates entry execution
 - `kira_native_bridge` handles bridge descriptors and native/runtime symbol binding
 
+Hybrid is intentionally explicit: runtime bytecode calls native Kira functions through generated bridge/trampoline entrypoints. The VM side does not execute FFI symbols directly.
+
 ## Native Library Placement
 
 FFI work is intentionally not buried inside the frontend.
@@ -65,6 +67,8 @@ FFI work is intentionally not buried inside the frontend.
 - `kira_manifest` parses the per-library TOML shape
 - `kira_build` discovers matching manifests near the source file, resolves them for the host, builds static archives when needed, and runs the autobinder
 - `kira_llvm_backend` consumes the resolved native libraries when emitting native or hybrid output
+
+Semantic analysis enforces the declaration boundary before backend selection: direct use of an FFI-bound extern requires `@Native`, while ordinary Kira callers of that native helper remain ordinary Kira declarations.
 
 ## Why The Repo Is Split This Way
 

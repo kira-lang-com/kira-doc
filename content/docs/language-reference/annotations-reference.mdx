@@ -65,6 +65,7 @@ Important current rules:
 - `@Main` must identify the single entrypoint
 - duplicate `@Main` is rejected
 - conflicting execution annotations are rejected
+- direct FFI usage requires `@Native`; calling a Kira helper that is already `@Native` does not force the caller to be `@Native`
 
 ## Documentation Comments
 

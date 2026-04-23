@@ -27,6 +27,31 @@ function kira_invoke_callback(callback: kira_i64_callback, user_data: RawPtr, va
 
 The semantics layer enforces that `@FFI.Extern` functions must be declarations rather than block-bodied functions.
 
+## Native Boundary Rule
+
+Direct FFI usage requires `@Native`.
+
+That rule applies at the declaration that actually touches the FFI-bound symbol:
+
+```ts
+@Native
+function createPipelineNative(desc: sg_pipeline_desc) -> sg_pipeline {
+    return sg_make_pipeline(desc)
+}
+```
+
+The rule is deliberately not transitive. A regular Kira declaration may call a Kira helper that is already `@Native`:
+
+```ts
+function createPipeline(desc: sg_pipeline_desc) -> sg_pipeline {
+    return createPipelineNative(desc)
+}
+```
+
+The direct native edge stays small and honest, while higher-level Kira code can remain ordinary runtime code when it is only orchestrating Kira helpers or moving handles around.
+
+Today, direct FFI usage includes direct calls or references to `@FFI.Extern` functions. Kira reports `KSEM093` when a non-`@Native` declaration directly uses one. The diagnostic points at the FFI-bound symbol and asks you to mark the declaration `@Native` or move the direct extern call into a small native helper.
+
 ## Callback Types
 
 Callback signatures are first-class enough to validate:

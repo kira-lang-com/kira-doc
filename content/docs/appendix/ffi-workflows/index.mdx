@@ -14,9 +14,21 @@ The supported path today is:
 - per-library TOML manifests under nearby `native_libs/`
 - Clang-driven autobinding generation
 - generated bindings emitted as real Kira source files
-- direct extern/native calls with no public shim or wrapper API
+- direct extern calls from explicitly marked `@Native` Kira declarations
 - explicit callback support
 - LLVM/native and hybrid as the intended FFI-capable pipelines
+
+## Native Edge Discipline
+
+Kira keeps the native boundary explicit:
+
+- a declaration that directly calls or references an `@FFI.Extern` symbol must be `@Native`
+- a declaration that only calls another Kira declaration marked `@Native` does not itself need `@Native`
+- storing opaque handles or passing values returned by native helpers through ordinary Kira logic does not create a transitive native requirement by itself
+
+This distinction matters for Kira Graphics-style packages. Sokol-facing helpers should be small `@Native` declarations that touch generated bindings directly. Higher-level graphics API code can call those helpers, keep ordinary Kira execution semantics, and stay available to hybrid/debug/live-runtime workflows.
+
+The VM does not execute FFI directly. In hybrid mode, runtime bytecode crosses to native code through the bridge/trampoline path; it does not magically invoke C ABI functions from the VM.
 
 ## Current Scope
 

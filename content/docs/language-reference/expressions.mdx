@@ -120,11 +120,25 @@ let handler: (Float) -> Void = update
 handler(0.016)
 ```
 
+Inline callback blocks use `{ params in ... }` and require an expected function type:
+
+```ts
+let handler: (Float) -> Void = { dt in
+    update(dt)
+}
+
+registerFrameHandler { frame, data in
+    return
+}
+```
+
 Current status for function values:
 
 - function types are valid in parameters, locals, and fields
 - named function references and non-capturing inline callback literals are lowered across the shared executable backends
 - callable-value invocations through locals and fields are part of the current lowered subset
+- callback block parameters are inferred from the expected function type and must match its arity
+- callback blocks are non-capturing; reading an outer local from the surrounding function is rejected with a callback-capture diagnostic
 
 Current callback/block distinction:
 

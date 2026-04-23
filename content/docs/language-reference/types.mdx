@@ -24,6 +24,16 @@ Kira now checks first-class non-capturing function types:
 
 These types are valid in parameters, fields, and local declarations. The current implementation lowers named function references, non-capturing inline callback literals, and callable-value invocations through locals and fields across the shared executable backends.
 
+Inline callback blocks are checked against an expected function type instead of declaring parameter types inside the block:
+
+```ts
+let cleanup: (Graphics, RawPtr) -> Void = { graphics, data in
+    return
+}
+```
+
+The supported callback model is non-capturing. A callback block can be stored anywhere an ordinary function value of the same type can be stored, but it cannot close over surrounding locals. Use callback parameters or `RawPtr` user data for callback state.
+
 ## Named Types
 
 Named value types are declared with `struct`; behavior-bearing inheritable declarations use `class`:
