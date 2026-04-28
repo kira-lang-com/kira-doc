@@ -69,6 +69,16 @@ class StoryLane {
 }
 ```
 
+## Type Execution Annotations
+
+`@Native` and `@Runtime` may appear on type declarations too.
+
+- `struct` is reserved for execution-boundary typing plus compiler FFI annotations
+- ordinary annotated structs should use only `@Native` or `@Runtime`
+- `class` keeps its broader annotation flexibility
+
+That means the execution model can be expressed on value shapes directly without turning `@Native` into a usability quarantine for the rest of the language.
+
 ## FFI-Generated Types
 
 Generated bindings use `struct`, often with compiler-meaning annotations:

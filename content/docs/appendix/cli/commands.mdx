@@ -6,16 +6,19 @@ description: Command-by-command behavior for the current `kira` CLI.
 ## `run`
 
 ```bash
-kira run [--backend vm|llvm|hybrid] [--offline] [--locked] [<project-dir|kira.toml|project.toml>]
+kira run [--backend vm|llvm|hybrid] [--trace-execution] [--offline] [--locked] [<project-dir|kira.toml|project.toml>]
 ```
 
 - default backend: VM
 - `--backend llvm`: builds and runs a native executable
 - `--backend hybrid`: builds a hybrid manifest, bytecode sidecar, and native shared library, then runs the mixed module
+- `--trace-execution`: debug-only stderr trace for VM/native/bridge/trampoline transitions during `run`
 - `--offline`: use only cached dependencies
 - `--locked`: require the existing lockfile state
 - when no path is given, Kira uses the current directory and prefers `kira.toml`, then legacy `project.toml`
 - the default VM path can print scalar values plus named struct values
+
+`--trace-execution` is meant for backend debugging. In hybrid mode it makes bridge entry, callback return, struct/class materialization, copy-back, and print-side ownership visible without changing normal program output.
 
 ## `build`
 

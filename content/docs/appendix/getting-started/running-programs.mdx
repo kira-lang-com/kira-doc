@@ -61,6 +61,14 @@ The repo currently proves all three paths:
 
 Today, the broadest `print(...)` surface lives on the VM/default execution path. Native and hybrid backends still have a narrower runtime print surface while their lowering/runtime support catches up.
 
+For backend debugging, `run` also supports:
+
+```bash
+kira run --backend hybrid --trace-execution examples/hybrid_roundtrip
+```
+
+That debug-only flag writes trace lines to stderr so you can see VM/native/bridge transitions, callback entry/return flow, and print ownership while a mixed program runs.
+
 ## Build Artifacts
 
 `build` writes artifacts into `generated/` by default:

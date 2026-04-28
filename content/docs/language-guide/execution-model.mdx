@@ -31,13 +31,13 @@ The VM also does not execute FFI directly. A declaration that directly calls or 
 
 ## LLVM / Native
 
-The native path lowers shared IR through the LLVM C API and links a host executable:
+The native path lowers shared IR through the LLVM path and links a host executable:
 
 ```bash
 kira run --backend llvm examples/callbacks
 ```
 
-Use it when the program should run natively and the entrypoint is native-capable.
+Use it when the program should run natively and the entrypoint is native-capable. The LLVM/native path is no longer meant to be a tiny restricted subset for ordinary Kira programs.
 
 ## Hybrid
 
@@ -47,7 +47,14 @@ Hybrid mode makes the mixed model explicit:
 - `@Native` functions compile into native code
 - both sides run in one process through the hybrid runtime and native bridge
 
-Hybrid is VM execution plus native trampolines and bridges. It is not a blanket permission for runtime bytecode to call FFI symbols directly.
+Hybrid is VM execution plus native trampolines and bridges. It is not a blanket permission for runtime bytecode to call FFI symbols directly, but it is the normal home for mixed `@Runtime` and `@Native` Kira code.
+
+That execution split is meant to feel natural in ordinary Kira code:
+
+- `@Runtime` code may call `@Native` helpers directly
+- `@Runtime` code may construct, read, and mutate `@Native` structs and classes
+- `@Native` code may call back into `@Runtime` helpers
+- the bridge handles materialization and copy-back across the boundary so `@Native` is an execution/performance boundary, not a usability quarantine
 
 Example:
 
@@ -63,6 +70,24 @@ runtime helper
 native helper
 ```
 
+## Debug Trace
+
+For mixed execution debugging, `run` also exposes a debug-only execution trace:
+
+```bash
+kira run --backend hybrid --trace-execution examples/hybrid_roundtrip
+```
+
+When enabled, Kira writes structured trace lines to stderr so you can see where execution is actually happening:
+
+- `VM` for bytecode-side prints and runtime execution helpers
+- `NATIVE` for native print/output helpers
+- `BRIDGE` for runtime/native materialization and copy steps
+- `TRAMPOLINE` for native-to-runtime invocations
+- `CALLBACK` for runtime callback entry/return flow
+
+The trace is for development and debugging. Normal runs stay quiet unless you opt in.
+
 ## Practical Rule
 
 Read execution annotations this way today:
@@ -71,3 +96,4 @@ Read execution annotations this way today:
 - LLVM/native needs a native-capable entrypoint
 - hybrid is the natural home for mixed runtime/native programs, especially FFI-heavy ones
 - direct FFI usage requires `@Native`, but callers of `@Native` Kira helpers do not become native automatically
+- outside direct FFI usage, `@Runtime` and `@Native` are execution-boundary annotations rather than usability restrictions

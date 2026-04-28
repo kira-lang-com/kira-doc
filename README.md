@@ -1,3 +1,9 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="Images/KiraDocumentationBannerDark.png">
+  <source media="(prefers-color-scheme: light)" srcset="Images/KiraDocumentationBannerLight.png">
+  <img alt="Kira Documentation" src="Images/KiraDocumentationBannerLight.png">
+</picture>
+
 # Kira Documentation Site
 
 This app contains the Bun-powered Kira documentation website built with Next.js and Fumadocs.

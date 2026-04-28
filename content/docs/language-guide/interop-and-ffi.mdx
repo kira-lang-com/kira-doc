@@ -50,6 +50,15 @@ function createPipeline(desc: sg_pipeline_desc) -> sg_pipeline {
 
 The direct native edge stays small and honest, while higher-level Kira code can remain ordinary runtime code when it is only orchestrating Kira helpers or moving handles around.
 
+That rule is deliberately narrow:
+
+- direct FFI usage requires `@Native`
+- indirect usage remains allowed
+- `@Runtime` code may still call `@Native` Kira helpers, construct native-annotated values, mutate them, and pass them back through hybrid honestly
+- `@Native` code may call back into `@Runtime` helpers through the same bridge
+
+Native-annotated structs and classes are still ordinary Kira values. Outside direct FFI edges, they are meant to move through runtime/native code naturally rather than forcing transitive `@Native` contagion on the surrounding API.
+
 Today, direct FFI usage includes direct calls or references to `@FFI.Extern` functions. Kira reports `KSEM093` when a non-`@Native` declaration directly uses one. The diagnostic points at the FFI-bound symbol and asks you to mark the declaration `@Native` or move the direct extern call into a small native helper.
 
 ## Callback Types

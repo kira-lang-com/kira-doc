@@ -20,7 +20,7 @@ description: A compact status matrix for what Kira parses, semantically checks, 
 | construct forms and builder blocks | Yes | Yes | check-oriented only | check-oriented only | check-oriented only |
 | `@FFI.Extern` declarations | Yes | Yes | No | Yes | Yes |
 | callback-typed FFI calls | Yes | Yes | No | Yes | Yes |
-| builtin `print` | Yes | Yes | Yes for scalars, pointers, and named struct values | narrower proven subset | narrower proven subset |
+| builtin `print` | Yes | Yes | Yes for scalars, pointers, arrays, and named struct values | Yes for ordinary executable values, including named structs and array summaries | Yes for ordinary executable values, including named structs and array summaries |
 | named struct construction | Yes | Yes | Yes | Yes | Yes |
 | callable values through locals and fields | Yes | Yes | Yes | Yes | Yes |
 
@@ -32,4 +32,4 @@ This table is intentionally conservative.
 - `partial` means the syntax and semantic model exist, but the manual does not claim broad runnable coverage.
 - `check-oriented only` means the feature is part of the implemented frontend and semantic validation surface, not a claim about today's executable lowering.
 
-For the current repo state, the VM/default execution path has the broadest printable runtime value surface.
+For the current repo state, VM, LLVM/native, and hybrid share the same ordinary executable lowering surface for the checked-in parity and interop corpus.
